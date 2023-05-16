@@ -1,2 +1,4 @@
 node_modules/
-data/
+# data/new-york-times.db
+# data/new-york-times.db-shm
+# data/new-york-times.db-wal

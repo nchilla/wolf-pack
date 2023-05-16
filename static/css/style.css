@@ -61,7 +61,7 @@ input[type="text"],input[type="text"]:focus,input[type="number"],input[type="num
     --bg:var(--ui-bg);
     background-color:var(--bg);
     border-radius:5px;
-    padding:4px 6px;
+    padding:0px 4px;
 }
 
 input[type="text"],input[type="text"]:focus{
@@ -73,6 +73,7 @@ input[type="text"],input[type="text"]:focus{
 
 
 button{
+    padding:0px 6px;
     border-radius:50%;
 }
 
@@ -88,8 +89,9 @@ button{
 }
 
 
-input[type="number"]{
+input[type="number"],input[type="number"]:focus{
     cursor:ns-resize;
+    padding:0px 3px;
 }
 
 input[type="number"].invalid,input[type="number"].invalid:focus{
@@ -118,8 +120,8 @@ input[type="number"].invalid,input[type="number"].invalid:focus{
     display:inline-block;
     vertical-align:middle;
     min-width:40px;
-    min-height:37px;
-    padding:4px 6px;
+    min-height:30px;
+    padding:0px 4px;
     box-sizing:border-box;
     /* display:inline-block; */
     position:relative;
@@ -136,6 +138,7 @@ input[type="number"].invalid,input[type="number"].invalid:focus{
     top:0;
     left:0;
     width:100%;
+    height:100%;
     box-sizing:border-box;
 }
 

@@ -12,7 +12,7 @@ const Database=require('better-sqlite3');
 const db = new Database('data/new-york-times.db', { verbose: console.log,readonly:true });
 
 //root directory
-let dir='/Users/hubblebot/Documents/dev-offline/wolf-pack-server';
+let dir=__dirname;
 
 //serve static assets (e.g. css, js) from static folder
 app.use(express.static("static"));

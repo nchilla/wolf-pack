@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Wolf Pack</title>
+    <meta http-equiv="Content-Type" content="text/html;" charset="utf-8" >
+    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/clearstyle.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/d3.js" charset="utf-8" preload></script>
+    <script type="module" src="js/function.js" charset="utf-8" preload></script>
+ 
+
+  </head>
+
+  <body>
+    <main>
+      <section id="graph-column">
+        <nav id="search">
+          Mentions of <span class="search-terms"><button class="add-more">+</button></span> in crime coverage by The New York Times from <span class="year-wrapper"><input data-val="1975" data-clamp="min" type="number" value="1975" min="1975" max="1998" step="1"> to <input data-clamp="max" data-val="2000" type="number" value="2000" min="1977" max="2000"></span>
+        </nav>
+        <figure id="graph-wrapper">
+          <svg id="graph">
+            <marker
+              id="dot"
+              viewBox="0 0 10 10"
+              refX="5"
+              refY="5"
+              vector-effect="non-scaling-size"
+              markerWidth="3"
+              markerHeight="3">
+              <circle cx="5" cy="5" r="5" fill="red" />
+            </marker>
+            <g id="x-axis"></g>
+            <g id="y-axis"></g>
+          </svg>
+        </figure>
+      </section>
+      <article id="content-column"></article>
+    </main>
+    
+    
+    
+  </body>
+  
+</html>

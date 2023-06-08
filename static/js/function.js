@@ -205,7 +205,7 @@ const Graph = class {
         this.box.attr('width',this.dimensions.w + 40);
         this.box.attr('height',this.dimensions.h);
         d3.select('#graph-wrapper').style('height',this.dimensions.h+'px')
-        this.box.attr('viewBox',`-20 0 ${this.dimensions.w+30} ${this.dimensions.h}`)
+        this.box.attr('viewBox',`-40 0 ${this.dimensions.w+60} ${this.dimensions.h}`)
         this.box.select('#x-axis').attr('transform',`translate(0,${this.dimensions.h-20})`)
         if(this.data) this.update();
     }

@@ -4,8 +4,8 @@ let timer;
 
 
 let terms=[
-    {gram:'crime',color:'133, 122, 255',visible:true},
-    {gram:'',color:"255, 187, 147",visible:false},
+    {gram:'crime',color:'255, 0, 245',visible:true},
+    {gram:'',color:"0, 255, 224",visible:false},
     {gram:'',color:'102, 73, 73',visible:false},
     {gram:'',color:'67, 150, 66',visible:false},
     {gram:'',color:'254, 198, 0',visible:false}

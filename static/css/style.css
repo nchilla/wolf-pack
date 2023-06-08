@@ -43,12 +43,17 @@ article{
     flex:1;
     border-left:1px solid black;
     background-color:var(--article-bg);
-    padding:34px 20px;
+    
     height:100vh;
     box-sizing:border-box;
 }
 
-
+.page{
+    padding:34px 20px;
+    box-sizing:border-box;
+    height:100vh;
+    overflow:scroll;
+}
 
 .page>*{
     margin-bottom:12px;
@@ -79,6 +84,7 @@ article{
     display:block;
     margin-bottom:6px;
     line-height:1.2em;
+    /* letter-spacing: -0.02em; */
 }
 
 summary{
@@ -120,6 +126,8 @@ details[open] summary::after{
     position:sticky;
     top:0;
     max-height:100vh;
+    height:100vh;
+    box-sizing:border-box;
 }
 
 #search{
@@ -137,7 +145,7 @@ details[open] summary::after{
 }
 
 
-input[type="text"],input[type="text"]:focus,input[type="number"],input[type="number"]:focus,button{
+input[type="text"],input[type="text"]:focus,input[type="number"],input[type="number"]:focus,.add-more{
     font-family:var(--ff);
     font-size:var(--fs);
     line-height:var(--lh);
@@ -148,6 +156,12 @@ input[type="text"],input[type="text"]:focus,input[type="number"],input[type="num
     letter-spacing: -0.02em;
 }
 
+button{
+    background-color:none;
+    padding:0px 6px;
+    border-radius:4px;
+}
+
 input[type="text"],input[type="text"]:focus{
     border-radius:0;
     --bg:rgba(var(--rgb),0.2);
@@ -156,12 +170,10 @@ input[type="text"],input[type="text"]:focus{
 
 
 
-button{
-    padding:0px 6px;
-    border-radius:50%;
-}
+
 
 .add-more{
+    border-radius:50%;
     /* height:var(--lh); */
     height:24px;
     vertical-align:middle;
@@ -251,6 +263,15 @@ input[type="number"].invalid,input[type="number"].invalid:focus{
     position:relative;
 }
 
+figcaption{
+    position:absolute;
+    top:0;
+    right:0;
+    background-color:white;
+    color:#9E9E9E;
+    font-size:12px;
+}
+
 #graph{
     /* width:100%;
     min-width:100%; */
@@ -267,6 +288,42 @@ input[type="number"].invalid,input[type="number"].invalid:focus{
     fill:none;
     stroke-linecap:round;
     stroke-linejoin:round;
+}
+
+
+#brown-logo{
+    position:absolute;
+    bottom:0px;
+    right:36px;
+    width:155px;
+}
+
+#brown-logo img{
+    width:100%;
+}
+
+
+#bottom-area{
+    position:absolute;
+    bottom:20px;
+    left:0;
+    width:100%;
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content: flex-start;
+}
+
+#bottom-area button,#bottom-area a{
+    text-decoration:underline;
+    text-underline-offset:4px;
+    padding:0px;
+    margin-right:10px;
+}
+
+#bottom-area a{
+    color:#9E9E9E;
+    
+    
 }
 
 
@@ -288,12 +345,22 @@ h2,summary::after{
     text-transform:uppercase;
     font-weight:500;
     margin-bottom:12px;
+    letter-spacing: 0.06em;
 }
 
 .tick text{
     font-size: 12px;
     font-family:var(--ff);
 }
+
+#x-axis-years .tick text,#x-axis-years .domain{
+    display:none;
+}
+
+#x-axis-years line{
+    stroke:#E2E2E2;
+}
+
 
 
 @font-face {

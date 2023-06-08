@@ -247,10 +247,16 @@ const Graph = class {
         let x_axis=d3.axisBottom(x_scale)
         let y_axis=d3.axisLeft(y_scale)
 
+        let x_axis_years=d3.axisBottom(x_scale)
+            .ticks(d3.timeYear.every(1))
+            .tickSize(this.dimensions.h - 20)
+
             // .append('g').attr('transform',`translate(0,${this.dimensions.h-20})`)
             // .append('g').attr('transform','translate(0,0)')
+        this.box.select('#x-axis-years').call(x_axis_years);
         this.box.select('#x-axis').call(x_axis);
         this.box.select('#y-axis').call(y_axis);
+        
 
         let line_generator = d3.line()
             .x((d)=>x_scale(d.x))

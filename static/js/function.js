@@ -141,6 +141,13 @@ function init(){
         if(terms.filter(a=>!a.visible).length<1) d3.select(this).classed('hide',true)
     })
 
+    d3.select('a.to-page').on('click',function(){
+        event.preventDefault()
+        d3.select('.current').classed('current',false)
+
+        d3.select(event.currentTarget.getAttribute("href")).classed('current',true)
+    })
+
     search();
 }
 

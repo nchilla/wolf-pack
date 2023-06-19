@@ -34,11 +34,10 @@ function update_search_entry(){
                 let wrapper_wrapper=enter.insert('span','button').attr('class','wrapper-wrapper');
                 let wrapper=wrapper_wrapper.append('span').attr('class','gram-search-wrapper')
                 
-                // let inner_wrapper=wrapper.append('span').attr('class',)
+
                 let width_setter=wrapper.append('span').attr('class','width-setter').text((d)=>d.gram)
                 
-                // <span class="gram-search-wrapper"><span class="width-setter">crime</span><input type="text" class="gram-search" data-index="0" value="crime" style="--rgb:133, 122, 255;"></span>
-
+     
                 wrapper
                     .append('input')
                     .attr('type','text')
@@ -141,11 +140,13 @@ function init(){
         if(terms.filter(a=>!a.visible).length<1) d3.select(this).classed('hide',true)
     })
 
-    d3.select('a.to-page').on('click',function(){
+    d3.selectAll('button.to-page')
+    .on('click',function(){
         event.preventDefault()
         d3.select('.current').classed('current',false)
 
-        d3.select(event.currentTarget.getAttribute("href")).classed('current',true)
+        d3.select(event.currentTarget.dataset.href).classed('current',true)
+        console.log(event.currentTarget.dataset.href)
     })
 
     search();

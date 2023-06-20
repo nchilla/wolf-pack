@@ -278,7 +278,6 @@ const Graph = class {
             .defined(d => d.y !== null) 
         
 
-
         this.lines=this.lines.data(filtered,d=>d.gram+'-'+d.color)
             .join(
                 enter=>enter

@@ -4,11 +4,11 @@ let timer;
 
 
 let terms=[
-    {gram:'crime',color:'255, 0, 245',visible:true},
-    {gram:'',color:"0, 255, 224",visible:false},
-    {gram:'',color:'102, 73, 73',visible:false},
-    {gram:'',color:'67, 150, 66',visible:false},
-    {gram:'',color:'254, 198, 0',visible:false}
+    {gram:'crime',color:'255, 0, 245',visible:true,plot:[]},
+    {gram:'',color:"0, 255, 224",visible:false,plot:[]},
+    {gram:'',color:'102, 73, 73',visible:false,plot:[]},
+    {gram:'',color:'67, 150, 66',visible:false,plot:[]},
+    {gram:'',color:'254, 198, 0',visible:false,plot:[]}
 ];
 
 let graph;
@@ -27,8 +27,8 @@ window.addEventListener('load',init)
 function update_search_entry(){
     d3.select('.search-terms').attr('data-count',terms.filter(a=>a.visible).length)
     let search_term_selection=d3.select('.search-terms').selectAll('.wrapper-wrapper');
-    console.log()
-    search_term_selection=search_term_selection.data(terms.filter(a=>a.visible),(d)=>d.color)
+
+    search_term_selection=search_term_selection.data(terms.filter(a=>a.visible),(d)=>d.gram+d.color)
         .join(
             enter=>{
                 let wrapper_wrapper=enter.insert('span','button').attr('class','wrapper-wrapper');
@@ -49,7 +49,7 @@ function update_search_entry(){
                         //cases to handle in the future:
                             // more than 4 spaces (6+ gram)
                             // non-escaped sqlite command characters, e.g. ''
-                        console.log(event,d)
+                    
                         
                         
                         width_setter.text(this.value);
@@ -60,7 +60,10 @@ function update_search_entry(){
                         let input=d3.select(this);
                         timer=setTimeout(function(){
                             input.attr('data-old',d.gram)
+
                             if(d.gram.length>0) search();
+
+
                         },1000)
                     }).on('focusout',function(event,d){
                         let i=terms.indexOf(d);
@@ -78,8 +81,7 @@ function update_search_entry(){
                         }
                     })
                 
-                // let width_setter=d3.select(this.parentNode).select('.width-setter');
-                //         width_setter.text(this.value)
+       
                 
                 return wrapper_wrapper;
             }
@@ -146,7 +148,7 @@ function init(){
         d3.select('.current').classed('current',false)
 
         d3.select(event.currentTarget.dataset.href).classed('current',true)
-        console.log(event.currentTarget.dataset.href)
+       
     })
 
     search();
@@ -177,7 +179,11 @@ function search(){
         console.log('response:',json)
         if(json.terms.filter(a=>a!==null).length>0){
             let plots=process_data(json.terms);
-            graph.update(plots);
+            terms.map(term=>{
+                term.plot=plots.find(a=>a.gram==term.gram)?.plot;
+            })
+            console.log(terms)
+            graph.update(terms);
         }
         
         // graph.update(json.terms);
@@ -207,7 +213,7 @@ const Graph = class {
     }
 
     set_size(){
-        // console.log(d3.select('#graph-wrapper').node().getComputedStyle.width)
+   
         this.dimensions.w=d3.select('#graph-wrapper').node().offsetWidth;
         this.dimensions.h=0.6*this.dimensions.w+20;
         this.box.attr('width',this.dimensions.w + 40);
@@ -223,9 +229,11 @@ const Graph = class {
         this.data=data;
         console.log('parsed:',data)
         
-        let filtered=data.map(term=>{
+        //filters by visibility and year range
+        let filtered=data.filter(a=>a.visible).map(term=>{
             return {
                 gram:term.gram,
+                color:term.color,
                 plot:term.plot.filter(entry=>{return entry.x.getFullYear()>=clamp.min&&entry.x.getFullYear()<=clamp.max})
             }
         })
@@ -238,9 +246,6 @@ const Graph = class {
         // - if 
 
 
-        // let x_scale=d3.scaleTime()
-        //     .domain(d3.extent(flattened,(d)=>d.x))
-        //     .range([0,100])
 
         let x_scale=d3.scaleTime()
             .domain([parse_date(`${clamp.min}_01`),parse_date(`${clamp.max}_12`)])
@@ -274,13 +279,13 @@ const Graph = class {
         
 
 
-        this.lines=this.lines.data(filtered,d=>d.gram)
+        this.lines=this.lines.data(filtered,d=>d.gram+'-'+d.color)
             .join(
                 enter=>enter
                     .append('path')
                     .attr('data-gram',d=>d.gram)
                     .attr('vector-effect','non-scaling-stroke')
-                    .style('stroke',(d,i)=>`rgb(${terms[i].color})`)
+                    .style('stroke',(d,i)=>`rgb(${d.color})`)
                     // .attr('marker-mid','url(#dot)')
                     .attr('d',d=>line_generator(d.plot)),
                 update=>update
@@ -308,7 +313,7 @@ function process_data(response){
             
         }
 
-        console.log(plot)
+
         for(let y=1975; y<=2000;y++){
             for(let m=1; m<=12;m++){
                 let d=parse_date(`${y}_${m<10?0:''}${m}`);

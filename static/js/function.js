@@ -1,10 +1,13 @@
 console.log('hi')
 
+
+
+
 let timer;
 
 
 let terms=[
-    {gram:'crime',color:'255, 0, 245',visible:true,plot:[]},
+    {gram:'youth',color:'255, 0, 245',visible:true,plot:[]},
     {gram:'',color:"0, 255, 224",visible:false,plot:[]},
     {gram:'',color:'102, 73, 73',visible:false,plot:[]},
     {gram:'',color:'67, 150, 66',visible:false,plot:[]},
@@ -68,14 +71,12 @@ function update_search_entry(){
                     }).on('focusout',function(event,d){
                         let i=terms.indexOf(d);
                         if(!d.gram.length>0&&terms.filter(a=>a.visible).length>1){
-                            console.log('remove')
                             d.visible=false;
                             // wrapper.remove();
                             update_search_entry();
                             let input=d3.select(this);
                             let response_ind=graph.data.findIndex((a)=>a.gram==input.attr('data-old'));
                             if(response_ind>-1) graph.data.splice(response_ind,1);
-                            console.log(response_ind,d.gram)
                             graph.update();
                             d3.select('.add-more').classed('hide',false)
                         }
@@ -91,6 +92,9 @@ function update_search_entry(){
 }
 
 function init(){
+    
+
+
     graph = new Graph(d3.select('#graph'));
     
     d3.selectAll('.year-wrapper input')
@@ -182,7 +186,7 @@ function search(){
             terms.map(term=>{
                 term.plot=plots.find(a=>a.gram==term.gram)?.plot;
             })
-            console.log(terms)
+            
             graph.update(terms);
         }
         
@@ -218,7 +222,11 @@ const Graph = class {
         this.dimensions.h=0.6*this.dimensions.w+20;
         this.box.attr('width',this.dimensions.w + 40);
         this.box.attr('height',this.dimensions.h);
+
+     
+
         d3.select('#graph-wrapper').style('height',this.dimensions.h+'px')
+        
         this.box.attr('viewBox',`-40 0 ${this.dimensions.w+60} ${this.dimensions.h}`)
         this.box.select('#x-axis').attr('transform',`translate(0,${this.dimensions.h-20})`)
         if(this.data) this.update();
@@ -275,7 +283,7 @@ const Graph = class {
             .x((d)=>x_scale(d.x))
             .y((d)=>y_scale(d.y))
             .curve(d3.curveLinear)
-            .defined(d => d.y !== null) 
+            .defined(d => d.y !== null)
         
 
         this.lines=this.lines.data(filtered,d=>d.gram+'-'+d.color)
@@ -290,8 +298,13 @@ const Graph = class {
                 update=>update
                     .attr('d',d=>line_generator(d.plot))
             )
+
+        
+       
     }
 }
+
+
 
 
 function process_data(response){

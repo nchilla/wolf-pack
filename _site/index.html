@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script type="module" src="js/d3.js" charset="utf-8" preload></script>
     <script type="module" src="js/function.js" charset="utf-8" preload></script>
+    <link preload href="data/publications.json">
     <!-- <script type="module" src="js/function.js" charset="utf-8" preload></script> -->
  
 
@@ -21,11 +22,22 @@
           
           <span id="publication-dropdown">
             <details  class="noselect">
-              <summary>The New York Times </summary>
+              <summary>all publications</summary>
                 <ul>
-                  <li data-value="all-publications">All publications</li>
-                  <li data-value="all-print">All print</li>
-                  <li data-value="all-radio">All ratio</li>
+                  <div class="publication-search"><input type="text" placeholder="search"></div>
+                  
+                  <!-- <li data-value="all-publications" data-selected="true">
+                    <input type="checkbox" checked name="all-publications">
+                    <label>All publications</label>
+                  </li>
+                  <li data-value="all-print" data-selected="false">
+                    <input type="checkbox" name="all-print">
+                    <label>All print</label>
+                  </li>
+                  <li data-value="all-radio" data-selected="false">
+                    <input type="checkbox" name="all-radio">
+                    <label>All radio</label>
+                  </li> -->
                 </ul>
             </details>
             

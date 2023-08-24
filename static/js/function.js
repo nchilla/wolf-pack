@@ -5,6 +5,14 @@ console.log('hi')
 
 let timer;
 
+let dom_loaded=false;
+let publications=[
+    {name:'All publications',key:'all_publications',checked:true,type:'general'},
+    {name:'All print',key:'all_print',checked:false,type:'general',match:'print'},
+    {name:'All radio',key:'all_radio',checked:false,type:'general',match:'radio'}
+];
+let publications_set_up=false;
+
 
 let terms=[
     {gram:'youth',color:'255, 0, 245',visible:true,plot:[]},
@@ -13,6 +21,21 @@ let terms=[
     {gram:'',color:'67, 150, 66',visible:false,plot:[]},
     {gram:'',color:'254, 198, 0',visible:false,plot:[]}
 ];
+
+async function get_publist() {
+    const response = await fetch("data/publications.json");
+    const data = await response.json();
+    data.publications.map(a=>{
+        a.checked=false;
+        a.type=a.type||'print';
+    })
+    publications=publications.concat(data.publications);
+    if(dom_loaded&&!publications_set_up) set_up_publication_dropdown();
+}
+
+get_publist();
+
+
 
 let graph;
 
@@ -23,6 +46,7 @@ let clamp={
 
 const parse_date=d3.timeParse("%Y_%m");
 let search_term_selection=d3.select('.search-terms').selectAll('.gram-search');
+let dropdown_items=d3.select('#publication-dropdown ul').selectAll('li');
 
 window.addEventListener('load',init)
 
@@ -92,8 +116,8 @@ function update_search_entry(){
 }
 
 function init(){
+    dom_loaded=true;
     
-
 
     graph = new Graph(d3.select('#graph'));
     
@@ -155,7 +179,82 @@ function init(){
        
     })
 
+    if(publications.length>3&&!publications_set_up) set_up_publication_dropdown();
+    
     search();
+
+    
+
+}
+
+
+function set_up_publication_dropdown(){
+    publications_set_up=true;
+
+    let dropdown=document.querySelector('#publication-dropdown');
+    let dropdown_search=d3.select('#publication-dropdown input[type="text"]');
+
+
+    // publications
+
+    let selected_summary='';
+
+    // publications=generalizations.concat(publications);
+    let visible_publications=publications;
+    console.log(publications)
+    update_dropdown();
+
+    
+    function update_dropdown(){
+        let selected=publications.filter(a=>a.checked).map(a=>a.type=='general'?a.name.toLowerCase():a.name);
+        console.log(selected);
+        // let find_all_pubs=selected.findIndex(a=>a=="all publications")
+        
+        // if(selected.length>1&&find_all_pubs>=0){
+        //     selected.splice(find_all_pubs,1);
+        // }
+        console.log(selected.length)
+        if(selected.length>1) selected[selected.length - 1]='and '+selected[selected.length - 1];
+        selected_summary=selected.join(selected.length>2?', ':' ');
+        if(selected.find(a=>a=='all publications')) selected_summary='all publications';
+        
+        d3.select('#publication-dropdown summary').text(selected_summary);
+
+        dropdown_items=dropdown_items.data(visible_publications,(d)=>d.key)
+        .join(enter=>{
+            let li=enter.append('li')
+                .attr('data-selected',d=>d.checked);
+            let checkbox=li.append('input').attr("type", "checkbox").property('checked',d=>d.checked)
+            let label=li.append('label').text(d=>d.name);
+            checkbox.on('change',function(){
+                let data=d3.select(this).data()[0];
+                // if(publications.find(a=>a.key=='all_publications').checked&&)
+                if(!(visible_publications.filter(a=>a.checked).length<2&&data.checked)){
+                    data.checked=this.checked
+                    update_dropdown();
+                    search();
+                };
+                
+                
+            })
+            return li;
+        },update=>{
+            update
+                .attr('data-selected',d=>d.checked);
+            return update;
+        })
+    }
+
+    dropdown_search.on('input',function(){
+   
+        let str=this.value.toLowerCase();
+        visible_publications=publications.filter(a=>{
+            return a.checked||a.name.toLowerCase().includes(str)
+        });
+        
+        update_dropdown();
+        
+    })
 }
 
 
@@ -165,10 +264,11 @@ function init(){
 
 
 
-
 function search(){
+    console.log(publications)
     let query={
-        terms:terms.filter(a=>a.gram.length>0).map(a=>a.gram)
+        terms:terms.filter(a=>a.gram.length>0).map(a=>a.gram),
+        publications:publications.filter(a=>a.checked)
     }
     console.log('query:',query)
     fetch('/search',{

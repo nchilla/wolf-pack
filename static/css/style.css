@@ -172,33 +172,106 @@ summary{
     line-height:24px;
 }
 
+#publication-dropdown details[open] summary{
+    border-bottom: 1px solid #d5d4d4;
+}
+
 #publication-dropdown summary{
     position:relative;
     z-index:3;
+    
 }
 
 #publication-dropdown ul{
     z-index:2;
     position:absolute;
-    top:20px;
-    
+    bottom:-10px;
+    /* left:50%;
+    transform: translate(-50%,100%); */
     left:0;
+    transform:translate(0,100%);
+    /* border: 1px solid #d5d4d4; */
+    
     background-color:var(--ui-bg);
     border-radius:5px;
-    padding:2px 4px;
-    padding-top:10px;
+    padding:0px 4px;
+    padding-bottom:2px;
+    
     min-width:100%;
+    box-sizing:border-box;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:flex-start;
+    max-height:310px;
+    overflow:scroll;
+    
+}
+
+.publication-search{
+    background-color:var(--ui-bg);
+    padding-top:6px;
+    position:sticky;
+    
+    border-bottom: 1px solid #d5d4d4;
+    margin-bottom:-1px;
+    top:0;
+    order:1;
+    z-index:100;
+}
+
+#publication-dropdown input[type="text"]{
+    
+    padding:0px 4px;
+    width:100%;
+    /* background-color:white; */
+    font-size: 16px;
     box-sizing:border-box;
 }
 
 #publication-dropdown ul li{
-    padding: 2px 0px;
-    color: #7d7d7d;
-    border-top: 1px solid #d5d4d4;
-    font-size:16px;
+    position:relative;
+    order:30;
 }
 
-#publication-dropdown ul li::before{
+#publication-dropdown ul li label{
+    padding: 2px 0px;
+    padding-right: 10px;
+    color: #545454;
+    border-top: 1px solid #d5d4d4;
+    font-size:16px;
+    cursor:pointer;
+    min-width:100%;
+    display:block;
+    white-space:nowrap;
+    box-sizing: border-box;
+    z-index:5;
+}
+
+#publication-dropdown ul li input[type="checkbox"]{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    cursor:pointer;
+    opacity:0;
+    margin:0;
+    z-index:200;
+}
+
+#publication-dropdown ul li[data-selected="true"] label,#publication-dropdown ul li:hover label{
+    color:black;
+}
+
+#publication-dropdown ul li[data-selected="true"]{
+    /* order:2; */
+}
+
+#publication-dropdown ul li:hover{
+    color:black;
+}
+
+#publication-dropdown ul li label::before{
     content: '';
     height: 16px;
     width: 16px;
@@ -210,7 +283,12 @@ summary{
     margin-right: 5px;
     position: relative;
     top: 0.05em;
+    pointer-events:none;
     
+}
+
+#publication-dropdown ul li[data-selected="true"] label::before{
+    background-color: black;
 }
 
 

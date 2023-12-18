@@ -7,7 +7,7 @@ let timer;
 
 let dom_loaded=false;
 let publications=[
-    {name:'All publications',key:'all_publications',checked:true,type:'general'},
+    {name:'All publications',key:'all_publications',checked:false,type:'general'},
     {name:'All print',key:'all_print',checked:false,type:'general',match:'print'},
     {name:'All radio',key:'all_radio',checked:false,type:'general',match:'radio'}
 ];
@@ -26,7 +26,8 @@ async function get_publist() {
     const response = await fetch("data/publications.json");
     const data = await response.json();
     data.publications.map(a=>{
-        a.checked=false;
+        // TEMP - setting nyt as publication for testing
+        a.checked=a.id==38;
         a.type=a.type||'print';
     })
     publications=publications.concat(data.publications);
@@ -208,11 +209,7 @@ function set_up_publication_dropdown(){
     function update_dropdown(){
         let selected=publications.filter(a=>a.checked).map(a=>a.type=='general'?a.name.toLowerCase():a.name);
         console.log(selected);
-        // let find_all_pubs=selected.findIndex(a=>a=="all publications")
-        
-        // if(selected.length>1&&find_all_pubs>=0){
-        //     selected.splice(find_all_pubs,1);
-        // }
+
         console.log(selected.length)
         if(selected.length>1) selected[selected.length - 1]='and '+selected[selected.length - 1];
         selected_summary=selected.join(selected.length>2?', ':' ');
@@ -320,7 +317,7 @@ const Graph = class {
    
         this.dimensions.w=d3.select('#graph-wrapper').node().offsetWidth;
         this.dimensions.h=0.6*this.dimensions.w+20;
-        this.box.attr('width',this.dimensions.w + 40);
+        this.box.attr('width',this.dimensions.w + 85);
         this.box.attr('height',this.dimensions.h);
 
      
@@ -349,11 +346,6 @@ const Graph = class {
         for(let term of filtered) flattened=flattened.concat(term.plot);
 
 
-        //for x labels:
-        // - if less than a certain amount, show all
-        // - if 
-
-
 
         let x_scale=d3.scaleTime()
             .domain([parse_date(`${clamp.min}_01`),parse_date(`${clamp.max}_12`)])
@@ -364,16 +356,18 @@ const Graph = class {
         let y_scale=d3.scaleLinear()
             .domain([0,d3.max(flattened,(d)=>d.y)])
             .range([this.dimensions.h - 20,10]);
+
+        const formatPercent = d3.format(".3~%")
         
         let x_axis=d3.axisBottom(x_scale)
-        let y_axis=d3.axisLeft(y_scale)
+        let y_axis=d3.axisLeft(y_scale).tickFormat(formatPercent);
+
+        
 
         let x_axis_years=d3.axisBottom(x_scale)
             .ticks(d3.timeYear.every(1))
             .tickSize(this.dimensions.h - 20)
 
-            // .append('g').attr('transform',`translate(0,${this.dimensions.h-20})`)
-            // .append('g').attr('transform','translate(0,0)')
         this.box.select('#x-axis-years').call(x_axis_years);
         this.box.select('#x-axis').call(x_axis);
         this.box.select('#y-axis').call(y_axis);

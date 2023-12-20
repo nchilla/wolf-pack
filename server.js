@@ -63,8 +63,13 @@ function handle_search({terms,publications}){
 
     for(let term of terms){
         let n=count_n(term);
+        let return_obj={
+            gram:term,
+            response_type:'success'
+        }
         // still have to figure out what happens/happened to quotations in terms
         let gram_id=db.prepare(`SELECT id FROM _grams_n${n} WHERE gram = '${term}';`).get()?.id;
+        
         if(gram_id){
             let start_string=`SELECT month, (CAST(SUM(counts.count) AS FLOAT) / CAST( SUM(_totals_n${n}.count) AS FLOAT)) AS val FROM `;
             let selects=[];
@@ -77,9 +82,17 @@ function handle_search({terms,publications}){
             let totals_join_string = `\nLEFT JOIN _totals_n${n} USING(month) WHERE (\n` + conditionals.join(`\n OR `) + `\n)`;
             let query=start_string + select_string + totals_join_string + `\n GROUP BY month ORDER BY month;`
             console.log(query);
-            let data_return=db.prepare(query).all();
-            console.log(data_return);
+            let data=db.prepare(query).all();
+            
+            // in the future add a conditional here, something like
+            // if data.length>3, do this
+            return_obj.data=data;
+            // else change response type to 'insufficient data';
+
+        }else{
+            return_obj.response_type='insufficient data';
         }
+        response.terms.push(return_obj)
     }
 
     let t1=Date.now();
@@ -91,7 +104,7 @@ function handle_search({terms,publications}){
 
 
 app.listen(port, function () {
-    console.log(`Example app listening on port ${port}!`);
+    console.log(`Listening on port ${port}!`);
 });
 
 

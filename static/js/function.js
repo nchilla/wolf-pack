@@ -7,9 +7,9 @@ let timer;
 
 let dom_loaded=false;
 let publications=[
-    {name:'All publications',key:'all_publications',checked:false,type:'general'},
-    {name:'All print',key:'all_print',checked:false,type:'general',match:'print'},
-    {name:'All radio',key:'all_radio',checked:false,type:'general',match:'radio'}
+    {name:'All publications',key:'_sum_all_publications',checked:false,type:'general'},
+    {name:'All print',key:'_sum_print',checked:false,type:'general',match:'print'},
+    {name:'All radio',key:'_sum_radio',checked:false,type:'general',match:'radio'}
 ];
 let publications_set_up=false;
 
@@ -23,18 +23,18 @@ let terms=[
 ];
 
 async function get_publist() {
-    const response = await fetch("data/publications.json");
+    const response = await fetch("data/publications-tags.json");
     const data = await response.json();
-    data.publications.map(a=>{
+    data.map(a=>{
         // TEMP - setting nyt as publication for testing
         a.checked=a.id==38;
         a.type=a.type||'print';
     })
-    publications=publications.concat(data.publications);
+    publications=publications.concat(data);
     if(dom_loaded&&!publications_set_up) set_up_publication_dropdown();
 }
 
-get_publist();
+
 
 
 
@@ -45,7 +45,7 @@ let clamp={
     max:2000
 }
 
-const parse_date=d3.timeParse("%Y_%m");
+const parse_date=d3.timeParse("%Y-%m");
 let search_term_selection=d3.select('.search-terms').selectAll('.gram-search');
 let dropdown_items=d3.select('#publication-dropdown ul').selectAll('li');
 
@@ -116,7 +116,9 @@ function update_search_entry(){
 
 }
 
-function init(){
+async function init(){
+    await get_publist();
+
     dom_loaded=true;
     
 
@@ -348,7 +350,7 @@ const Graph = class {
 
 
         let x_scale=d3.scaleTime()
-            .domain([parse_date(`${clamp.min}_01`),parse_date(`${clamp.max}_12`)])
+            .domain([parse_date(`${clamp.min}-01`),parse_date(`${clamp.max}-12`)])
             .range([0,this.dimensions.w + 20])
             
         
@@ -405,24 +407,18 @@ function process_data(response){
     
     let plots=[];
     for(let term of response){
-        let plot=[];
-        let keys=Object.keys(term);
-        for(let key of keys){
-            
-            if(key!=='gram'){
-                let ym=key.replace('m','');
-                plot.push({
-                    x:parse_date(ym),
-                    y:term[key]?term[key]:0
-                })
+        let plot=term.data.map(datapt=>{
+            return {
+                x:parse_date(datapt.month),
+                y:datapt.val
             }
-            
-        }
-
+        });
+        console.log(plot)
+      
 
         for(let y=1975; y<=2000;y++){
             for(let m=1; m<=12;m++){
-                let d=parse_date(`${y}_${m<10?0:''}${m}`);
+                let d=parse_date(`${y}-${m<10?0:''}${m}`);
                 let date_exists=plot.some(a=>a.x.valueOf()==d.valueOf());
                 if(!date_exists) plot.push({
                     x:d,
@@ -437,7 +433,7 @@ function process_data(response){
 
         plots.push({
             gram:term.gram,
-            plot:plot
+            plot
         })
     }
     

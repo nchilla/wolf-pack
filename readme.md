@@ -2,7 +2,7 @@
 
 1. Run `npm install` to install node dependencies
 
-2. Download database file `all-pubs-eav.db` from [here]([https://www.dropbox.com/sh/x3daejm3nbp23h6/AADcbhIMYrY2UHr-Rm2usqj2a?dl=0](https://www.dropbox.com/s/ctekr4xd5nlhxpu/all-pubs-eav.db?dl=0)) and put it in `data/`.
+2. Download database file `all-pubs-eav.db` from [here](https://www.dropbox.com/s/ctekr4xd5nlhxpu/all-pubs-eav.db?dl=0) and put it in `data/`.
 
 3. Run `npm run dev`. This will run sveltekit, starting a local server for the project
 

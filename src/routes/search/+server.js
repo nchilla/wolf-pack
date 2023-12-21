@@ -10,8 +10,10 @@ const db = new Database(db_name, {readonly:true });
 export async function POST({ request }) {
     // console.log('req',request)
     let parsed=await request.json();
-    console.log('NEW SEARCH ----------------');
+    console.log('NEW SEARCH ====================================');
+    console.log('request from client:',parsed)
     let response=handle_search(parsed);
+    console.log('\n------------------------------\nreturning response (see web console for data).....................')
     return json(response)
 }
 
@@ -41,7 +43,7 @@ function handle_search({terms,publications}){
             let select_string = ` (\n` + selects.join(`\nUNION ALL\n`)  + `\n) AS COUNTS`;
             let totals_join_string = `\nLEFT JOIN _totals_n${n} USING(month) WHERE (\n` + conditionals.join(`\n OR `) + `\n)`;
             let query=start_string + select_string + totals_join_string + `\n GROUP BY month ORDER BY month;`
-            console.log(query);
+            console.log(`\nsql query for "${term}" -----------------------`,`\n\n${query}`);
             let data=db.prepare(query).all();
             
             // in the future add a conditional here, something like

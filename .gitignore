@@ -3,7 +3,9 @@ node_modules/
 # data/new-york-times.db-shm
 # data/new-york-times.db-wal
 long-tails/
+old/long-tails/
 counts/
+old/counts/
 garbage.js
 new_server.js
 old_server.js

@@ -32,11 +32,11 @@ for(let y=1975;y<2000;y++){
 let dir=__dirname;
 
 //serve static assets (e.g. css, js) from static folder
-app.use(express.static("static"));
+app.use(express.static("_express_static"));
 
 //sends the html for the page when a request arrives for the root director (localhost:3000/)
 app.get("/", function (req, res) {
-    res.sendFile(dir + "/_site/index.html");
+    res.sendFile(dir + "/_express_site/index.html");
 });
 
 

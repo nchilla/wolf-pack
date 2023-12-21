@@ -21,9 +21,6 @@ let terms=[
     {gram:'',color:'67, 150, 66',visible:false,plot:[]},
     {gram:'',color:'254, 198, 0',visible:false,plot:[]}
 ];
-//term input cases to handle in the future:
-    // more than 4 spaces (6+ gram)
-    // non-escaped sqlite command characters, e.g. ''
 
 async function get_publist() {
     const response = await fetch("data/publications-tags.json");

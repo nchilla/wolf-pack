@@ -2,9 +2,8 @@
 
 1. Run `npm install` to install node dependencies
 
-2. Download database file `new-york-times.db` from [this Dropbox folder](https://www.dropbox.com/sh/x3daejm3nbp23h6/AADcbhIMYrY2UHr-Rm2usqj2a?dl=0) and put it in `data/`. I'm not sure whether you also need the `-shm` and `-wal` files in that folder, but wouldn't hurt.
+2. Download database file `all-pubs-eav.db` from [here]([https://www.dropbox.com/sh/x3daejm3nbp23h6/AADcbhIMYrY2UHr-Rm2usqj2a?dl=0](https://www.dropbox.com/s/ctekr4xd5nlhxpu/all-pubs-eav.db?dl=0)) and put it in `data/`.
 
-3. Run `npm start`. This will run `server.js`, which uses Express to start a local server that listens for page and search requests.
+3. Run `npm run dev`. This will run sveltekit, starting a local server for the project
 
-4. Navigate to `localhost:3000` to test out the graph. You’ll see search requests and performance details in the terminal, as well as in the browser console.
-
+4. Navigate to `localhost:5173` (or whatever server the terminal leads you to) to test out the graph. You’ll see search requests and performance details in the terminal, as well as in the browser console.

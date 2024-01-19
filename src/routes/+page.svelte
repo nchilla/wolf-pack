@@ -125,7 +125,7 @@
 
 
     let terms=[
-        {gram:'youth',old:'',color:'255, 0, 245',visible:true,plot:[],node:undefined,i:0},
+        {gram:'gang',old:'',color:'255, 0, 245',visible:true,plot:[],node:undefined,i:0},
         {gram:'',old:'',color:"0, 255, 224",visible:false,plot:[],node:undefined,i:1},
         {gram:'',old:'',color:'102, 73, 73',visible:false,plot:[],node:undefined,i:2},
         {gram:'',old:'',color:'67, 150, 66',visible:false,plot:[],node:undefined,i:3},

@@ -1,5 +1,13 @@
 ### Story 1 TK
 
-Sharletta Evans lost her three-year-old son in a hail of bullets one torturous December evening in 1995. The Colorado mother had pulled her car up in front of a northeast Denver house, intending to dash inside to pick up her niece’s baby girl, to bring her out of harm’s way. Gunfire on the street the night before had frightened everyone in the house.
+`
+{
+    "terms": ["youth","juvenile"],
+    "pub_keys":["_sum_all_publications"],
+    "clamps":{"start":1980,"end":2000}
+}
+`
 
-On this night, a small, white car carrying three teenagers cruised to a stop in front of the house in Park Hill, on a block scarred by violence since the mid-1980s. Two teens emerged and opened fire, spraying the house they thought was filled with rival gang members.* Little Casson Xavier, nicknamed “Biscuit,” was shot as he slept in his car seat next to his six-year-old brother. Evans cradled her toddler in her arms as he bled to death before emergency medical workers could arrive. “He took his last breath in my arms,” Evans remembered recently with painful clarity. “Still, I thought they could revive him.”
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt dolor nunc, sit amet dignissim dui bibendum gravida. Curabitur et mi tristique, fermentum eros vel, consequat est. In hac habitasse platea dictumst. Praesent mattis tortor eget mauris blandit cursus. Suspendisse sagittis convallis erat nec ornare. Duis dolor leo, lacinia id vehicula eget, feugiat ut libero. Integer ut cursus diam, non porttitor felis. In porta nisi ipsum, a fringilla urna bibendum id.
+
+Donec ipsum sem, sodales at condimentum sed, tempor bibendum justo. Duis eget faucibus neque. Vestibulum at mauris efficitur, semper ante at, efficitur sapien. Nulla faucibus dictum lectus, in sagittis leo placerat quis. Fusce semper, augue in lobortis sagittis, erat neque elementum purus, porttitor tempor tortor quam nec odio. Donec vulputate, metus ullamcorper auctor eleifend, tortor dolor scelerisque ligula, non porta velit velit nec nunc. Nam feugiat eu magna eget hendrerit.

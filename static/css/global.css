@@ -1,0 +1,52 @@
+body{
+    --ff:'Public Sans', sans-serif;
+    font-family:var(--ff);
+    --fs:16px;
+    font-size:var(--fs);
+    --lh:23px;
+    line-height:var(--lh);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+
+    --col1:255, 0, 245;
+    --col2:0, 255, 224;
+    --col3:102, 73, 73;
+    --col4:67, 150, 66;
+    --col5:254, 198, 0;
+}
+
+
+.color1{
+    background-color:rgba(var(--col1),0.2);
+    border-bottom:1px solid rgb(var(--col1));
+}
+
+.color2{
+    background-color:rgba(var(--col2),0.2);
+    border-bottom:1px solid rgb(var(--col2));
+}
+
+.color3{
+    background-color:rgba(var(--col3),0.2);
+    border-bottom:1px solid rgb(var(--col3));
+}
+
+.color4{
+    background-color:rgba(var(--col4),0.2);
+    border-bottom:1px solid rgb(var(--col4));
+}
+
+.color5{
+    background-color:rgba(var(--col5),0.2);
+    border-bottom:1px solid rgb(var(--col5));
+}
+
+
+.underline{
+    border-bottom:1px solid rgba(0,0,0,0.2);
+}
+
+.color1,.color2,.underline{
+    padding:0 3px;
+}

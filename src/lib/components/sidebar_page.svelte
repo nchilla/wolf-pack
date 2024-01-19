@@ -1,4 +1,5 @@
 <script>
+    import {getContext} from 'svelte';
     export let pageid;
     export let content_sections=[];
     export let stories=[];
@@ -6,6 +7,8 @@
     export let current_section;
 
     let page;
+    
+    let button_search=getContext('button_search');
 
     $:{
         let section=content_sections.find(a=>a.id==current_section);
@@ -17,6 +20,13 @@
     let go_to=()=> {
         current_page=event.target.dataset.page;
         if(event.target.dataset.section) current_section=event.target.dataset.section;
+    }
+
+
+    function generate_term_html(terms){
+        let term_tags=terms.map((term,i)=>`<span class="color${i+1}">${term}</span>`);
+        if(term_tags.length>1) term_tags[term_tags.length - 1]='and '+term_tags[term_tags.length - 1];
+        return term_tags.join(term_tags.length>2?', ':' ');
     }
 </script>
 
@@ -53,8 +63,16 @@
         
         {#each content_sections as section,n}
             <section class='content-section' bind:this={section.node}>
-                {#each section.text as paragraph}
-                    {@html paragraph}
+                {#each section.text as block,i}
+                    {#if i==1}<div class='neg-margin'></div>{/if}
+                    {#if typeof block == 'object'}
+                      <button on:click={()=>button_search(block)}  class='graph-input'>Mentions of {@html generate_term_html(block.terms)} by <span class="underline">{block.pub_string}</span> from <span class="underline">{block.clamps.start}</span> to <span class="underline">{block.clamps.end}</span>
+                        <span class="reset-chart">reset chart</span>
+                      </button>
+                    {:else}
+                        {@html block}
+                    {/if}
+                    
                 {/each}
                 
             </section>
@@ -119,19 +137,19 @@
     }
 
     .content-section{
-        margin-bottom:20px;
+        margin-bottom:40px;
     }
 
     :global(.content-section p){
-        margin-bottom:20px;
+        margin-bottom:12px;
     }
     :global(.content-section h3){
-        margin-bottom: -60px;
+        margin-bottom: -80px;
     }
 
-    :global(.content-section h3+p){
-        margin-top:74px;
-    }
+    /* :global(.content-section h3+p){
+        margin-top:94px;
+    } */
 
     /* #home{
         transform:translateX(-100%);
@@ -180,7 +198,11 @@
         
     } */
 
-    
+    :global(.page p){
+        font-family:'TeX Gyre Schola';
+        font-size:16px;
+        line-height:1.28em;
+    }
     
 
 
@@ -255,7 +277,16 @@
         line-height:24px;
         box-sizing:border-box;
         border:1px solid transparent;
+        
+        margin-bottom:12px;
     }
+
+
+    .neg-margin{
+        margin-top:94px;
+    }
+
+    
 
     @media(hover:hover){
         .graph-input:hover{

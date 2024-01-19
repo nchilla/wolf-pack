@@ -449,21 +449,5 @@
     }
 
 
-    .color1{
-        background-color:rgba(var(--col1),0.2);
-        border-bottom:1px solid rgb(var(--col1));
-    }
-
-    .color2{
-        background-color:rgba(var(--col2),0.5);
-        border-bottom:1px solid rgb(var(--col2));
-    }
-
-    .underline{
-        border-bottom:1px solid rgba(0,0,0,0.2);
-    }
-
-    .color1,.color2,.underline{
-        padding:0 3px;
-    }
+    
 </style>

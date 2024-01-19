@@ -20,13 +20,22 @@
     let current_section='';
 
 
+    
+
 
     // publication management ===========================================
 
     import publications_json from '$lib/publications-tags.json';
     let publications=publications_json;
 
-    
+    for(let story of stories){
+        for(let block of story.text){
+            if(typeof block == 'object'){
+                block.pubs=publications.filter(a=>block.pub_keys.includes(a.key));
+                block.pub_string=generate_pub_string(block.pubs);
+            }
+        }
+    }
     
 
     publications.sort((a,b)=>{
@@ -69,10 +78,18 @@
     }
     
     $: selected_pubs=publications.filter(a=>a.selected);
-    $: selected_strings=selected_pubs.map(a=>a.type=='sum'?a.name.toLowerCase():a.name);
-    $: if(selected_strings.length>1) selected_strings[selected_strings.length - 1]='and '+selected_strings[selected_strings.length - 1];
-    $: summary_string=selected_strings.join(selected_pubs.length>2?', ':' ');
+    // $: selected_strings=map_names(selected_pubs);
+    $: summary_string=generate_pub_string(selected_pubs);
     
+    function generate_pub_string(pubs){
+        let names=pubs.map(a=>a.type=='sum'?a.name.toLowerCase():a.name);
+        if(names.length>1) names[names.length - 1]='and '+names[names.length - 1];
+        return names.join(names.length>2?', ':' ');
+    }
+
+    setContext('generate_pub_string',generate_pub_string)
+
+
     let pub_cache=flatten_pub_list(selected_pubs);
 
     $:{
@@ -132,6 +149,27 @@
         console.log('already focused or undefined')
     }
 
+
+
+    function button_search(query){
+        terms.forEach((term,i)=>{
+            if(query.terms[i]) term.gram=query.terms[i];
+            else term.gram=''
+        })
+        terms=terms;
+        clamps.start=query.clamps.start;
+        clamps.end=query.clamps.end;
+
+        publications.forEach((pub)=>{
+            pub.checked=query.pub_keys.includes(pub.key)
+        })
+        publications=publications;
+        // clamps=clamps;
+        search();
+
+    }
+
+    setContext('button_search',button_search);
 
     // years ===================================
  
@@ -269,22 +307,6 @@
 
     
 
-    :global(body){
-        /* temp */
-        /* --ff:'Libre Franklin', sans-serif; */
-        --ff:'Public Sans', sans-serif;
-        font-family:var(--ff);
-        --fs:16px;
-        font-size:var(--fs);
-        --lh:23px;
-        line-height:var(--lh);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-
-
-        --col1:255, 0, 245;
-        --col2:0, 255, 224;
-    }
 
 
 
@@ -328,12 +350,9 @@
    
 
 
-    :global(.page p){
-        font-family:'TeX Gyre Schola';
-        font-size:16px;
-        line-height:1.28em;
-    }
+   
 
+    
     
 
 

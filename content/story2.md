@@ -1,9 +1,13 @@
 ### Story 2 TK
 
-Sharletta Evans lost her three-year-old son in a hail of bullets one torturous December evening in 1995. The Colorado mother had pulled her car up in front of a northeast Denver house, intending to dash inside to pick up her niece’s baby girl, to bring her out of harm’s way. Gunfire on the street the night before had frightened everyone in the house.
+`
+{
+    "terms": ["accountability","bust","apprehend"],
+    "pub_keys":["new_york_times","los_angeles_times"],
+    "clamps":{"start":1990,"end":2000}
+}
+`
 
-On this night, a small, white car carrying three teenagers cruised to a stop in front of the house in Park Hill, on a block scarred by violence since the mid-1980s. Two teens emerged and opened fire, spraying the house they thought was filled with rival gang members.* Little Casson Xavier, nicknamed “Biscuit,” was shot as he slept in his car seat next to his six-year-old brother. Evans cradled her toddler in her arms as he bled to death before emergency medical workers could arrive. “He took his last breath in my arms,” Evans remembered recently with painful clarity. “Still, I thought they could revive him.”
+Suspendisse porta mollis augue sodales ultricies. Praesent eu neque in justo lobortis volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aenean sed consequat nisl. Nulla pulvinar tellus vitae ultrices tempus. Vivamus fringilla aliquet lorem at dictum. Maecenas viverra erat vitae risus rutrum, quis porta lectus gravida. Duis vulputate nibh in libero consectetur ullamcorper.
 
-On this night, a small, white car carrying three teenagers cruised to a stop in front of the house in Park Hill, on a block scarred by violence since the mid-1980s. Two teens emerged and opened fire, spraying the house they thought was filled with rival gang members.* Little Casson Xavier, nicknamed “Biscuit,” was shot as he slept in his car seat next to his six-year-old brother. Evans cradled her toddler in her arms as he bled to death before emergency medical workers could arrive. “He took his last breath in my arms,” Evans remembered recently with painful clarity. “Still, I thought they could revive him.”
-
-On this night, a small, white car carrying three teenagers cruised to a stop in front of the house in Park Hill, on a block scarred by violence since the mid-1980s. Two teens emerged and opened fire, spraying the house they thought was filled with rival gang members.* Little Casson Xavier, nicknamed “Biscuit,” was shot as he slept in his car seat next to his six-year-old brother. Evans cradled her toddler in her arms as he bled to death before emergency medical workers could arrive. “He took his last breath in my arms,” Evans remembered recently with painful clarity. “Still, I thought they could revive him.”
+Morbi malesuada odio enim, nec consequat ex tristique ac. Cras eu lacinia eros, sit amet iaculis nunc. Donec sed vehicula quam. Suspendisse luctus et nisi non feugiat. Morbi ut nibh a risus sagittis vestibulum et nec ipsum. Cras efficitur, ipsum sit amet mollis efficitur, purus augue ornare augue, vel eleifend ante orci sed massa. Cras enim nibh, tempus sed laoreet eget, viverra non velit. Etiam in felis in purus consequat ornare eu et eros. Donec arcu tellus, vestibulum ut urna non, fringilla eleifend augue. Donec vitae volutpat sapien. Integer imperdiet, purus non dictum tristique, lacus erat aliquet lorem, id eleifend dolor ante a nulla. Maecenas nec accumsan ante, at pellentesque mauris. Mauris hendrerit aliquet odio at facilisis. Proin ante dolor, ultrices nec diam in, tristique efficitur est. Quisque pulvinar tristique urna, sit amet fermentum velit sodales eget.

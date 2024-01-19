@@ -9,3 +9,12 @@ old/counts/
 garbage.js
 new_server.js
 old_server.js
+/build
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+.DS_Store

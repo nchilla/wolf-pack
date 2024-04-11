@@ -75,7 +75,9 @@ export const Graph = class {
 
         const formatPercent = d3.format(".3~%")
         
-        let x_axis=d3.axisBottom(x_scale).ticks(d3.timeYear.every(this.dimensions.w>700||(this.clamp.end-this.clamp.start<4)?2:4))
+        let x_axis=d3.axisBottom(x_scale)
+        
+        if(this.dimensions.w<=700&&(this.clamp.end-this.clamp.start>4)) x_axis.ticks(d3.timeYear.every(4))
 
         console.log('clamp',this.clamp.end-this.clamp.start>3)
         let y_axis=d3.axisLeft(y_scale).tickFormat(formatPercent);

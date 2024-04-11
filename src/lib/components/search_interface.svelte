@@ -1,5 +1,5 @@
 <script>
-    import {getContext} from 'svelte';
+    import {getContext,onMount} from 'svelte';
     export let pub_search_term;
     export let terms;
     export let visible_terms;
@@ -9,12 +9,15 @@
     export let publications;
     export let summary_string;
     export let doc;
+
+    let publication_dialog;
    
     $: checked_pubs=publications.filter(a=>a.checked);
 
     let term_timer;
 
     let search=getContext('search');
+    let update_graph=getContext('update_graph');
     let refresh_svelte_array=getContext('refresh_svelte_array');
 
     function toggle_focus(i,val){
@@ -67,15 +70,56 @@
                 search();
             }else{
                 term.plot=[];
-                graph.update();
+                update_graph();
             }
-            // console.log('!!! term update !!!')
-            // search();
-            
+
         },1000)
     }
-</script>
 
+    function toggle_pub_dialog(){
+  
+        publication_dialog.showModal();
+    }
+
+
+
+    onMount(()=>{
+        window.addEventListener('click',(e)=>{
+            if(publication_dialog?.open && !e.target.closest('#publication-dialog')&& !e.target.closest('#publication-dialog-button')){
+                publication_dialog.close();
+            }
+        })
+    })
+</script>
+<dialog id="publication-dialog" bind:this={publication_dialog}>
+    <ul>
+        <div class="publication-search">
+            <input
+                type="text"
+                placeholder="search"
+                bind:value={pub_search_term}
+            />
+        </div>
+        {#each publications as pub}
+            <li
+                class:selected={pub.checked}
+                class:hide={!pub.search_match && !pub.checked}
+                class:only-check={checked_pubs.length == 1 &&
+                    pub.checked}
+            >
+                <input
+                    type="checkbox"
+                    bind:checked={pub.checked}
+                    id="{pub.key}_check"
+                    on:click={() => {
+                        refresh_svelte_array(publications);
+                    }}
+                />
+                <label for="{pub.key}_check">{pub.name}</label>
+            </li>
+        {/each}
+    </ul>
+</dialog>
 
 <nav id="search">
     Mentions of
@@ -108,8 +152,11 @@
     </span>
     in crime reporting by
 
-    <span id="publication-dropdown">
-        <details class="noselect">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <span id="publication-dialog-button" type="button" on:click={toggle_pub_dialog}>
+        {summary_string}
+        <!-- <details class="noselect">
             <summary>{summary_string}</summary>
             <ul>
                 <div class="publication-search">
@@ -138,7 +185,7 @@
                     </li>
                 {/each}
             </ul>
-        </details>
+        </details> -->
     </span>
 
     <!-- The New York Times -->
@@ -181,46 +228,57 @@
         font-weight:300;
     }
 
-    #publication-dropdown{
+    #publication-dialog-button{
         display:inline;
         height:24px;
+        line-height:24px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        /* height:24px;
+        max-height:24px; */
+        /* height:24px;
         max-height:24px;
         overflow:visible;
-        position:relative;
-    }
-
-
-    #publication-dropdown details{
-        display:inline;
-        background-color:var(--ui-bg);
+        position:relative; */
+        background-color: var(--ui-bg);
+        /* border:1px solid rgba(150,150,150); */
         border-radius:5px;
         padding:0px 4px;
-        line-height:24px;
+        cursor:pointer;
     }
 
-    #publication-dropdown details[open] summary{
-        border-bottom: 1px solid #d5d4d4;
-    }
-
-    #publication-dropdown details summary,#publication-dropdown details[open] summary{
-        position:relative;
-        z-index:3;
-        display:contents;
-        
-    }
-
-    #publication-dropdown details summary > * {
-        display: inline;
-    }
-
-    #publication-dropdown ul{
-        z-index:2;
+    #publication-dialog{
         position:absolute;
-        bottom:-10px;
+        top:50%;
+        left:calc(var(--w) * 0.5);
+        transform:translate(-50%,-50%);
+        z-index:200;
+        max-width:300px;
+        background: none;
+        border: none;
+        padding: 0;
+        height:310px;
+        margin:0;
+    }
+
+    #publication-dialog::backdrop{
+        background-color: rgba(0,0,0,0.1);
+        position:absolute;
+        top:0;
+        left:0;
+        width:var(--w);
+        height:100%;
+        pointer-events:none;
+    }
+
+    #publication-dialog ul{
+        z-index:2;
+        /* position:absolute; */
+        /* bottom:-10px; */
         /* left:50%;
         transform: translate(-50%,100%); */
-        left:0;
-        transform:translate(0,100%);
+        /* left:0; */
+        /* transform:translate(0,100%); */
         /* border: 1px solid #d5d4d4; */
         
         background-color:var(--ui-bg);
@@ -254,7 +312,7 @@
         z-index:100;
     }
 
-    #publication-dropdown input[type="text"]{
+    #publication-dialog input[type="text"]{
         
         padding:0px 4px;
         width:100%;
@@ -263,12 +321,13 @@
         box-sizing:border-box;
     }
 
-    #publication-dropdown ul li{
+    #publication-dialog ul li{
         position:relative;
         order:30;
+        z-index:30;
     }
 
-    #publication-dropdown ul li label{
+    #publication-dialog ul li label{
         padding: 2px 0px;
         padding-right: 10px;
         color: #545454;
@@ -282,7 +341,7 @@
         z-index:5;
     }
 
-    #publication-dropdown ul li input[type="checkbox"]{
+    #publication-dialog ul li input[type="checkbox"]{
         position:absolute;
         top:0;
         left:0;
@@ -294,28 +353,28 @@
         z-index:200;
     }
 
-    #publication-dropdown ul li.hide{
+    #publication-dialog ul li.hide{
         display:none;
     }
 
-    #publication-dropdown ul li.selected label,#publication-dropdown ul li:hover label{
+    #publication-dialog ul li.selected label,#publication-dialog ul li:hover label{
         color:black;
     }
-    #publication-dropdown ul li.only-check{
+    #publication-dialog ul li.only-check{
         pointer-events:none;
     }
 
 
 
-    #publication-dropdown ul li.selected{
+    #publication-dialog ul li.selected{
         /* order:2; */
     }
 
-    #publication-dropdown ul li:hover{
+    #publication-dialog ul li:hover{
         color:black;
     }
 
-    #publication-dropdown ul li label::before{
+    #publication-dialog ul li label::before{
         content: '';
         height: 16px;
         width: 16px;
@@ -331,12 +390,12 @@
         
     }
 
-    #publication-dropdown ul li.selected label::before{
+    #publication-dialog ul li.selected label::before{
         background-color: black;
     }
 
 
-    #publication-dropdown details summary::marker,#publication-dropdown details[open] summary::marker{
+    #publication-dialog details summary::marker,#publication-dialog details[open] summary::marker{
         display:none;
         content:'';
     }
@@ -378,7 +437,7 @@
 
 
     input[type="number"],input[type="number"]:focus{
-        cursor:ew-resize;
+        /* cursor:ew-resize; */
         /* padding:0px 3px; */
         height:calc(var(--lh) * 0.8);
         padding-right: 0;

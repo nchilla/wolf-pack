@@ -11,6 +11,12 @@
 
     export let data;
     let stories=data.stories;
+    for(let story of stories){
+        let query=story.text.find(a=>typeof a == 'object');
+        story.query=query;
+    }
+
+
 
     console.log(stories);
 
@@ -19,8 +25,13 @@
     let current_page='home';
     let current_section='';
 
+    let threshold = 0.5;
 
-    
+    let graph_state='loading';
+
+    $:console.log(graph_state);
+
+    let window_w;
 
 
     // publication management ===========================================
@@ -74,7 +85,7 @@
             }
 
         })
-        console.log(publications.filter(a=>a.selected));
+        // console.log(publications.filter(a=>a.selected));
     }
     
     $: selected_pubs=publications.filter(a=>a.selected);
@@ -97,7 +108,7 @@
             pub_cache=flatten_pub_list(selected_pubs);
             if(doc) search();
         }else{
-            console.log('no change to selected')
+            // console.log('no change to selected')
         }
     }
    
@@ -146,7 +157,7 @@
             terms[term_focused].node.focus();
         })
     }else{
-        console.log('already focused or undefined')
+        // console.log('already focused or undefined')
     }
 
 
@@ -182,6 +193,9 @@
         start:[1975,1998],
         end:[1977,2000]
     }
+    
+
+    let graph_column_width;
 
     // search ===================================
     function search(){
@@ -189,7 +203,9 @@
             terms:terms.filter(a=>a.gram.length>0).map(a=>a.gram),
             publications:selected_pubs
         }
-        console.log('query:',query)
+        // console.log('query:',query)
+        graph_state='loading';
+
         fetch('/search',{
             method:'POST',
             headers:{
@@ -199,36 +215,101 @@
         })
         .then((response) => response.json())
         .then((json) => {
-            console.log('response:',json)
-            if(json.terms.filter(a=>a!==null).length>0){
-                let plots=process_data(json.terms);
+            // console.log('response:',json)
+            let termlist=json.terms.filter(a=>
+                a!==null &&
+                a.response_type!=='insufficient data' &&
+                a.data.length>10
+            )
+
+            if(termlist.length>0){
+                console.log(termlist)
+                let plots=process_data(termlist);
                 terms.map(term=>{
                     term.plot=plots.find(a=>a.gram==term.gram)?.plot;
                 })
+
+                graph_state='graph';
                 
-                console.log(graph);
+                // console.log(graph);
+                
                 if(graph) graph.update(terms);
+            }else{
+                graph_state='no-data';
             }
             
         });
     }
 
     setContext('search',search)
+    
+    setContext('update_graph',()=>{
+        graph.update();
+    })
 
+    function go_to(e){
+        console.log('!!!',e);
+        current_page=e.target.dataset.page;
+        if(e.target.dataset.section) current_section=e.target.dataset.section;
+        if(e.target.dataset.page=='stories'){
+            let story=stories.find(a=>a.id==e.target.dataset.section );
+            button_search(story.query);
+        }
+    }
+
+    setContext('go_to',go_to);
 
     // onmount
     onMount(()=>{
         doc=document;
         // graph = new Graph(d3.select('#graph'),undefined,clamps);
         console.log('!!! initialization !!!')
+
+        
+		let observer = new IntersectionObserver(story_callback, {
+            root:doc.querySelector('#stories'),
+			threshold: [0, 0.01, 0.1, 0.5, 0.9,0.99, 1],
+			rootMargin: `${doc.querySelector('#stories').scrollHeight * 10}px 0px -${(1 - threshold) * 100}% 0px`
+		});
+        
+        let stories = Array.from(document.querySelectorAll('.story'));
+		for (let story of stories) observer.observe(story);
+
         search();
     })
 
+    let buffered_change;
+
+
+    function story_callback(entries){
+        if(window_w>900){
+            for (let entry of entries) {
+                let top = entry.boundingClientRect.top;
+                let bottom = entry.boundingClientRect.bottom;
+                let windowThreshold = window.innerHeight * threshold;
+                if (top < windowThreshold && bottom > windowThreshold && current_page=='stories'){
+                    let story=stories.find(a=>a.id==entry.target.dataset.storyid );
+                    let query=story.text.find(a=>typeof a == 'object');
+                    
+                    if(buffered_change) clearTimeout(buffered_change);
+                    buffered_change=setTimeout(()=>{
+                        console.log('changing to',story.id)
+                        button_search(query)
+                    },100)
+                    
+                }
+                    
+            }
+        }
+        
+    }
+
 </script>
 
+<svelte:window bind:innerWidth={window_w}/>
 
 <main>
-    <section id="graph-column">
+    <section id="graph-column" bind:offsetWidth={graph_column_width} style='--w:{graph_column_width}px;'>
       <SearchInterface 
         bind:pub_search_term 
         bind:terms 
@@ -240,11 +321,11 @@
         {summary_string}
         {doc}
       />
-      <GraphElement bind:clamps bind:graph />
+      <GraphElement bind:clamps bind:graph {graph_state} />
       <div id="bottom-area">
         <button>Download chart data</button>
-        <button>Save as image</button>
-        <button class="to-page" data-href="#methodology">Learn about how this data was collected and indexed →</button>
+        <!-- <button>Save as image</button> -->
+        <button class="to-page" data-page="about" on:click={go_to}>Learn about how this data was collected and indexed →</button>
       </div>
     </section>
     <article id="content-column">
@@ -253,48 +334,29 @@
         {stories} 
         bind:current_page
         bind:current_section
+        {window_w}
       />
       <SidebarPage
         pageid="stories" 
         content_sections={stories}
         bind:current_page
         bind:current_section
+        {window_w}
       />
       <SidebarPage 
         pageid="about" 
+        content_sections={data.about}
         bind:current_page
         bind:current_section
+        {window_w}
       />
       <SidebarPage 
         pageid="credits" 
+        content_sections={data.credits}
         bind:current_page
         bind:current_section
+        {window_w}
       />
-      <!-- <div class="page" id="stories">
-        <button class="to-page back-button" data-href="#home">&lt; contents</button>
-        
-        {#each stories as story,n}
-            <div id="story{n+1}" class='story'>
-                {#each story.story as paragraph}
-                    {@html paragraph}
-                {/each}
-                
-            </div>
-            
-        {/each}
-        
-      </div> -->
-      <!-- <div class="page" id="about">
-        <button class="to-page back-button" data-href="#home">&lt; contents</button>
-        <h3>About</h3>
-      </div>
-      <div class="page" id="methodology">
-        <button class="to-page back-button" data-href="#home">&lt; contents</button>
-        <h3>Methodology</h3>
-      </div>
-      <div class="page" id="credits">
-        <button class="to-page back-button" data-href="#home">&lt; contents</button>
-      </div> -->
       
     </article>
   </main>
@@ -332,7 +394,7 @@
 
     article{
         max-width:480px;
-        /* min-width:480px; */
+        min-width:380px;
         flex:1;
         overflow:hidden;
         height:100vh;
@@ -454,7 +516,7 @@
 
     :global(h1,#search,h3){
         --fs:20px;
-        font-size:20px;
+        font-size:var(--fs);
         letter-spacing: -0.02em;
         
     }
@@ -464,7 +526,63 @@
     }
 
     
+    @media(max-width:1200px){
+        #graph-column{
+            padding-left:20px;
+        }
 
+        #bottom-area{
+            
+            padding-left:20px;
+        }
+    }
+
+    @media(max-width:900px){
+        main{
+            flex-flow:column nowrap;
+            align-items:flex-start;
+            /* overflow:scroll; */
+        }
+
+        :global(h1,#search,h3){
+            --fs:18px;
+            /* letter-spacing:0; */
+        }
+
+        #bottom-area{
+            position:relative;
+            padding-top:30px;
+            padding-left:0;
+            padding-bottom: 10px;
+            
+        }
+
+        #bottom-area .to-page{
+            text-align: left;
+            white-space:unset;
+        }
+
+        article{
+            width:100%;
+            max-width:100%;
+            display:flex;
+            flex-flow:column nowrap;
+            /* overflow:hidden; */
+        }
+
+        
+
+        #graph-column{
+            overflow:hidden;
+            padding-bottom:0px;
+            max-width:100%;
+            padding:20px 15px;
+        }
+
+        main::after{
+            display:none;
+        }
+    }
 
     
 

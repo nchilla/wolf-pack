@@ -1,0 +1,57 @@
+<script>
+    import {getContext} from 'svelte';
+    let button_search=getContext('button_search');
+
+    export let query;
+
+    function generate_term_html(terms){
+        let term_tags=terms.map((term,i)=>`<span class="color${i+1}">${term}</span>`);
+        if(term_tags.length>1) term_tags[term_tags.length - 1]='and '+term_tags[term_tags.length - 1];
+        return term_tags.join(term_tags.length>2?', ':' ');
+    }
+</script>
+
+
+<button on:click={()=>button_search(query)}  class='graph-input'>Mentions of {@html generate_term_html(query.terms)} by <span class="underline">{query.pub_string}</span> from <span class="underline">{query.clamps.start}</span> to <span class="underline">{query.clamps.end}</span>
+    &nbsp;<span class="reset-chart">reset chart</span>
+</button>
+
+
+<style>
+    .graph-input{
+        text-align:left;
+        background-color:white;
+        border-radius:5px;
+        padding:5px 10px;
+        font-family:'Public Sans';
+        font-size:16px;
+        line-height:24px;
+        box-sizing:border-box;
+        border:1px solid transparent;
+        
+        margin-bottom:12px;
+    }
+
+    .reset-chart{
+        color:#8A8A8A;
+        text-transform:uppercase;
+        letter-spacing: 0.06em;
+        font-size:12px;
+        font-weight:500;
+        white-space:nowrap;
+        /* display:inline-block; */
+        /* display:block; */
+        margin-top:10px;
+        /* margin-left:10px; */
+    }
+
+    @media(hover:hover){
+        .graph-input:hover{
+            border:1px solid black;
+        }
+
+        .graph-input:hover .reset-chart{
+            color:black;
+        }
+    }
+</style>

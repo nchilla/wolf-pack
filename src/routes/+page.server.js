@@ -1,9 +1,11 @@
 
-import {stories} from '../hooks.server.js';
+import {stories,about,credits} from '../hooks.server.js';
 
 export async function load(event){
     return {
-        stories
+        stories,
+        about,
+        credits
     }
     // console.log('=============',stories);
 }

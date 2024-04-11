@@ -1,14 +1,17 @@
 <script>
     import {getContext} from 'svelte';
+    import QueryButton from './query_button.svelte';
     export let pageid;
     export let content_sections=[];
     export let stories=[];
     export let current_page;
     export let current_section;
+    export let window_w;
 
     let page;
     
     let button_search=getContext('button_search');
+    let go_to=getContext('go_to');
 
     $:{
         let section=content_sections.find(a=>a.id==current_section);
@@ -17,17 +20,8 @@
             page.scroll({left:0,top})
         }
     }
-    let go_to=()=> {
-        current_page=event.target.dataset.page;
-        if(event.target.dataset.section) current_section=event.target.dataset.section;
-    }
+    
 
-
-    function generate_term_html(terms){
-        let term_tags=terms.map((term,i)=>`<span class="color${i+1}">${term}</span>`);
-        if(term_tags.length>1) term_tags[term_tags.length - 1]='and '+term_tags[term_tags.length - 1];
-        return term_tags.join(term_tags.length>2?', ':' ');
-    }
 </script>
 
 
@@ -42,33 +36,42 @@
             <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p>
         </details>
         </section>
-        <section>
+        <section class='t-o-c'>
         <h2>Stories</h2>
             {#each stories as story,n}
-                <button class="to-page" data-page="stories" data-section="story{n+1}" on:click={go_to}>{story.title}</button>
+                <button on:click={go_to} class="to-page" data-page="stories" data-section="story{n+1}">{story.title}</button>
             {/each}
         </section>
-        <section>
+        <section class='t-o-c'>
         <h2>Info</h2>
         <button class="to-page" data-page="about" on:click={go_to}>About this project</button>
         <button class="to-page" data-page="credits" on:click={go_to}>Credits</button>
     </section>
-
-    <a href="https://brown.columbia.edu/" target="_blank" id="brown-logo"><img alt="The Brown Institute for Media Innovation logo" src="assets/brown-full-logo.png" ></a>
+    {#if window_w>900}
+        <a href="https://brown.columbia.edu/" target="_blank" id="brown-logo"><img alt="The Brown Institute for Media Innovation logo" src="assets/brown-full-logo.png" ></a>
+    {/if}
+    
     {:else}
         <div class='sticky-top-wrapper'>
-            <button class="to-page back-button" data-page="home" on:click={go_to}>&lt; contents</button>
+            
+            {#if window_w<=900}
+                <h2>{pageid}</h2>
+            {:else}
+                <button class="to-page back-button" data-page="home" on:click={go_to}>&lt; contents</button>
+            {/if}
+        
         </div>
         
         
         {#each content_sections as section,n}
-            <section class='content-section' bind:this={section.node}>
+            <section class='content-section' data-storyid="{pageid=='stories'?section.id:''}" class:story={pageid=='stories'} bind:this={section.node}>
                 {#each section.text as block,i}
                     {#if i==1}<div class='neg-margin'></div>{/if}
                     {#if typeof block == 'object'}
-                      <button on:click={()=>button_search(block)}  class='graph-input'>Mentions of {@html generate_term_html(block.terms)} by <span class="underline">{block.pub_string}</span> from <span class="underline">{block.clamps.start}</span> to <span class="underline">{block.clamps.end}</span>
+                        <QueryButton query={block} />
+                      <!-- <button on:click={()=>button_search(block)}  class='graph-input'>Mentions of {@html generate_term_html(block.terms)} by <span class="underline">{block.pub_string}</span> from <span class="underline">{block.clamps.start}</span> to <span class="underline">{block.clamps.end}</span>
                         <span class="reset-chart">reset chart</span>
-                      </button>
+                      </button> -->
                     {:else}
                         {@html block}
                     {/if}
@@ -79,6 +82,9 @@
             
         {/each}
     
+        {#if window_w<=900&&pageid=='credits'}
+            <a href="https://brown.columbia.edu/" target="_blank" id="brown-logo"><img alt="The Brown Institute for Media Innovation logo" src="assets/brown-full-logo.png" ></a>
+        {/if}
     {/if}
     
     <!-- <h3>Story 1 TK</h3> -->
@@ -137,7 +143,12 @@
     }
 
     .content-section{
-        margin-bottom:40px;
+        /* margin-bottom:40px; */
+        padding-bottom:40px;
+    }
+
+    .story{
+        min-height:50vh;
     }
 
     :global(.content-section p){
@@ -257,45 +268,83 @@
         text-align:left;
     }
 
-    .reset-chart{
-        color:#8A8A8A;
-        text-transform:uppercase;
-        letter-spacing: 0.06em;
-        font-size:12px;
-        font-weight:500;
-        display:block;
-        margin-top:10px;
-    }
+    
 
-    .graph-input{
-        text-align:left;
-        background-color:white;
-        border-radius:5px;
-        padding:5px 10px;
-        font-family:'Public Sans';
-        font-size:16px;
-        line-height:24px;
-        box-sizing:border-box;
-        border:1px solid transparent;
-        
-        margin-bottom:12px;
-    }
+    
 
 
     .neg-margin{
         margin-top:94px;
     }
 
-    
+    @media(max-width:900px){
 
-    @media(hover:hover){
-        .graph-input:hover{
-            border:1px solid black;
+        .t-o-c{
+            display:none;
+        }
+        .page{
+            position:relative;
+            transition:none;
+            transform:none;
+            padding-right:15px;
+            padding-left:15px;
+            height:fit-content;
+            border-left:none;
+            padding-bottom:0;
+            
         }
 
-        .graph-input:hover .reset-chart{
-            color:black;
+        #home{
+            order:1;
+            border-top:1px solid black;
+        }
+
+        #about{
+            order:2;
+        }
+
+        #credits{
+            order:3;
+        }
+
+        #stories{
+            order:4;
+        }
+
+        .sticky-top-wrapper{
+            /* display:none; */
+            padding-top:0;
+
+            padding-bottom:0;
+        }
+
+        .content-section{
+            padding-bottom:20px;
+        }
+
+        #credits .content-section{
+            padding-bottom:0;
+        }
+
+        #about .neg-margin,#credits .neg-margin{
+            margin-top:0;
+        }
+
+        #brown-logo{
+            position:relative;
+            display:block;
+            left:-5px;
+            bottom:0;
+            margin-top:20px;
+        }
+
+        .story{
+            min-height:fit-content;
         }
     }
+
+    
+
+    
 
 </style>

@@ -14,8 +14,11 @@ export async function POST({ request }) {
     console.log('request from client:',parsed)
     let response=handle_search(parsed);
     console.log('\n------------------------------\nreturning response (see web console for data).....................')
+    // await delay(2000);
     return json(response)
 }
+
+const delay = (t) => new Promise(resolve => setTimeout(resolve, t));
 
 function handle_search({terms,publications}){
     let response={

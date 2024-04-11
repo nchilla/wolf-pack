@@ -31,7 +31,7 @@ export const Graph = class {
     set_size(){
    
         this.dimensions.w=d3.select('#graph-wrapper').node().offsetWidth;
-        this.dimensions.h=0.6*this.dimensions.w+20;
+        this.dimensions.h=0.7*this.dimensions.w+20;
         this.box.attr('width',this.dimensions.w + 85);
         this.box.attr('height',this.dimensions.h);
 
@@ -47,7 +47,7 @@ export const Graph = class {
     update(data=this.data){
 
         this.data=data;
-        console.log('parsed:',data)
+        // console.log('parsed:',data)
         
         //filters by visibility and year range
         let filtered=data?.filter(a=>a.visible).map(term=>{
@@ -74,14 +74,19 @@ export const Graph = class {
 
         const formatPercent = d3.format(".3~%")
         
-        let x_axis=d3.axisBottom(x_scale)
-        let y_axis=d3.axisLeft(y_scale).tickFormat(formatPercent);
+        let x_axis=d3.axisBottom(x_scale).ticks(d3.timeYear.every(this.dimensions.w>700?2:4))
 
         
+        let y_axis=d3.axisLeft(y_scale).tickFormat(formatPercent);
+        if(this.dimensions.w<700) y_axis.ticks(5);
+
+        // console.log(this.dimensions.w,this.dimensions.w>700?1:2);    
 
         let x_axis_years=d3.axisBottom(x_scale)
-            .ticks(d3.timeYear.every(1))
+            .ticks(d3.timeYear.every(this.dimensions.w>700?1:2))
             .tickSize(this.dimensions.h - 20)
+
+        // console.log(x_axis_years);
 
         this.box.select('#x-axis-years').call(x_axis_years);
         this.box.select('#x-axis').call(x_axis);

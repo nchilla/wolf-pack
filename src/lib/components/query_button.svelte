@@ -3,6 +3,9 @@
     let button_search=getContext('button_search');
 
     export let query;
+    export let include_stories;
+
+    console.log('include_stories',include_stories)
 
     let window_w;
 
@@ -23,7 +26,7 @@
 <svelte:window bind:innerWidth={window_w}/>
 
 <button on:click={()=>{button_trigger(query)}}  class='graph-input'>Mentions of {@html generate_term_html(query.terms)} by <span class="underline">{query.pub_string}</span> from <span class="underline">{query.clamps.start}</span> to <span class="underline">{query.clamps.end}</span>
-    &nbsp;<span class="reset-chart">reset chart</span>
+    {#if include_stories}&nbsp;<span class="reset-chart">reset chart</span>{/if}
 </button>
 
 

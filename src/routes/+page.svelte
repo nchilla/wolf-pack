@@ -171,6 +171,8 @@
         terms=terms;
         clamps.start=query.clamps.start;
         clamps.end=query.clamps.end;
+        setminmax(clamps.start,'start');
+        setminmax(clamps.end,'end');
 
         publications.forEach((pub)=>{
             pub.checked=query.pub_keys.includes(pub.key)
@@ -194,6 +196,18 @@
         start:[1975,1998],
         end:[1977,2000]
     }
+
+    function is_invalid(v,which){
+        return v<minmax[which][0]||v>minmax[which][1];
+    }
+
+    function setminmax(v,which){
+        if(which=='start') minmax.end[0]=v+2;
+        else minmax.start[1]=v-2;
+    }
+
+    setContext('is_invalid',is_invalid);
+    setContext('setminmax',setminmax);
     
 
     let graph_column_width;
@@ -234,7 +248,7 @@
                 
                 // console.log(graph);
                 
-                if(graph) graph.update(terms);
+                if(graph) update_graph(terms)
             }else{
                 graph_state='no-data';
             }
@@ -244,9 +258,13 @@
 
     setContext('search',search)
     
-    setContext('update_graph',()=>{
-        graph.update();
-    })
+    function update_graph(){
+        console.log(clamps)
+        if(!is_invalid(clamps.start,'start')&&!is_invalid(clamps.end,'end')){
+            graph.update(terms);
+        }
+    }
+    setContext('update_graph',update_graph)
 
     function go_to(e){
         console.log('!!!',e);
@@ -348,6 +366,7 @@
         content_sections={stories}
         bind:current_page
         bind:current_section
+        include_stories={data.include_stories}
         {window_w}
         />
       {/if}
@@ -356,6 +375,7 @@
         content_sections={data.about}
         bind:current_page
         bind:current_section
+        include_stories={data.include_stories}
         {window_w}
       />
       <SidebarPage 
@@ -363,6 +383,7 @@
         content_sections={data.credits}
         bind:current_page
         bind:current_section
+        include_stories={data.include_stories}
         {window_w}
       />
       

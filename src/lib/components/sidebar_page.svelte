@@ -54,7 +54,7 @@
                 <details>
                     <summary><h2>Examples</h2></summary>
                     {#each stories as story}
-                        <QueryButton query={story.query} />
+                        <QueryButton query={story.query} {include_stories} />
                     {/each}
                     
                     <!-- <p>Here</p> -->
@@ -88,7 +88,7 @@
                 {#each section.text as block,i}
                     {#if i==1}<div class='neg-margin'></div>{/if}
                     {#if typeof block == 'object'}
-                        <QueryButton query={block} />
+                        <QueryButton query={block} {include_stories}/>
                       <!-- <button on:click={()=>button_search(block)}  class='graph-input'>Mentions of {@html generate_term_html(block.terms)} by <span class="underline">{block.pub_string}</span> from <span class="underline">{block.clamps.start}</span> to <span class="underline">{block.clamps.end}</span>
                         <span class="reset-chart">reset chart</span>
                       </button> -->

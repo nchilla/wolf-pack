@@ -31,19 +31,20 @@
         }
     }
 
-    function is_invalid(v,which){
-        return v<minmax[which][0]||v>minmax[which][1];
-    }
+    let is_invalid=getContext('is_invalid')
+
+    let setminmax=getContext('setminmax')
 
     function handle_year_event(which,event_type){
         let v=clamps[which];
+        console.log(event.type,'invalid?',is_invalid(v,which))
         if(event_type=='input'){
             if(!is_invalid(v,which)){
-                if(which=='start') minmax.end[0]=v+2;
-                else minmax.start[1]=v-2;
+                setminmax(v,which);
             }
         }else if(event_type=='change'){
             let node=doc.querySelector(`.year-wrapper input[data-clamp="${which}"]`)
+            console.log(clamps)
             if(is_invalid(v,which)){
                 clamps[which]=node.dataset.old;
             }else{
@@ -156,36 +157,6 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span id="publication-dialog-button" type="button" on:click={toggle_pub_dialog}>
         {summary_string}
-        <!-- <details class="noselect">
-            <summary>{summary_string}</summary>
-            <ul>
-                <div class="publication-search">
-                    <input
-                        type="text"
-                        placeholder="search"
-                        bind:value={pub_search_term}
-                    />
-                </div>
-                {#each publications as pub}
-                    <li
-                        class:selected={pub.checked}
-                        class:hide={!pub.search_match && !pub.checked}
-                        class:only-check={checked_pubs.length == 1 &&
-                            pub.checked}
-                    >
-                        <input
-                            type="checkbox"
-                            bind:checked={pub.checked}
-                            id="{pub.key}_check"
-                            on:click={() => {
-                                refresh_svelte_array(publications);
-                            }}
-                        />
-                        <label for="{pub.key}_check">{pub.name}</label>
-                    </li>
-                {/each}
-            </ul>
-        </details> -->
     </span>
 
     <!-- The New York Times -->

@@ -1,22 +1,28 @@
 <script>
     import * as d3 from 'd3';
-    import {onMount} from 'svelte';
+    import {onMount,getContext} from 'svelte';
     import {Graph} from '$lib/graph.js';
 
     export let graph;
     export let graph_state;
+    export let clamps;
+
+    let is_invalid=getContext('is_invalid')
 
     $:{
         if(graph){
-            graph.clamps=clamps;
-            graph.update();
+            if(!is_invalid(clamps.start,'start')&&!is_invalid(clamps.end,'end')){
+              graph.clamps=clamps;
+              graph.update();
+            }
+            
         }
     }
 
 
 
 
-    export let clamps;
+   
 
     
     // let search=getContext('search');

@@ -45,6 +45,7 @@ export const Graph = class {
     }
 
     update(data=this.data){
+        console.log('hey update!');
 
         this.data=data;
         // console.log('parsed:',data)

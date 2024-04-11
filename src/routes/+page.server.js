@@ -6,7 +6,7 @@ export async function load(event){
         stories,
         about,
         credits,
-        include_stories:true
+        include_stories:false
     }
     // console.log('=============',stories);
 }

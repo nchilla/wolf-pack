@@ -4,15 +4,25 @@
 
     export let query;
 
+    let window_w;
+
     function generate_term_html(terms){
         let term_tags=terms.map((term,i)=>`<span class="color${i+1}">${term}</span>`);
         if(term_tags.length>1) term_tags[term_tags.length - 1]='and '+term_tags[term_tags.length - 1];
         return term_tags.join(term_tags.length>2?', ':' ');
     }
+
+    function button_trigger(query){
+        button_search(query);
+        if(window_w<=900){
+            window.scroll({top:0,left:0,behavior:'smooth'})
+        }
+    }
 </script>
 
+<svelte:window bind:innerWidth={window_w}/>
 
-<button on:click={()=>button_search(query)}  class='graph-input'>Mentions of {@html generate_term_html(query.terms)} by <span class="underline">{query.pub_string}</span> from <span class="underline">{query.clamps.start}</span> to <span class="underline">{query.clamps.end}</span>
+<button on:click={()=>{button_trigger(query)}}  class='graph-input'>Mentions of {@html generate_term_html(query.terms)} by <span class="underline">{query.pub_string}</span> from <span class="underline">{query.clamps.start}</span> to <span class="underline">{query.clamps.end}</span>
     &nbsp;<span class="reset-chart">reset chart</span>
 </button>
 

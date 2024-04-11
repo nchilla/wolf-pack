@@ -266,15 +266,18 @@
         // graph = new Graph(d3.select('#graph'),undefined,clamps);
         console.log('!!! initialization !!!')
 
+        if(data.include_stories){
+            let observer = new IntersectionObserver(story_callback, {
+                root:doc.querySelector('#stories'),
+                threshold: [0, 0.01, 0.1, 0.5, 0.9,0.99, 1],
+                rootMargin: `${doc.querySelector('#stories').scrollHeight * 10}px 0px -${(1 - threshold) * 100}% 0px`
+            });
+            
+            let stories = Array.from(document.querySelectorAll('.story'));
+            for (let story of stories) observer.observe(story);
+        }
         
-		let observer = new IntersectionObserver(story_callback, {
-            root:doc.querySelector('#stories'),
-			threshold: [0, 0.01, 0.1, 0.5, 0.9,0.99, 1],
-			rootMargin: `${doc.querySelector('#stories').scrollHeight * 10}px 0px -${(1 - threshold) * 100}% 0px`
-		});
-        
-        let stories = Array.from(document.querySelectorAll('.story'));
-		for (let story of stories) observer.observe(story);
+		
 
         search();
     })
@@ -335,6 +338,7 @@
         {stories} 
         bind:current_page
         bind:current_section
+        include_stories={data.include_stories}
         {window_w}
       />
 

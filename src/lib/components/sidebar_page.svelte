@@ -6,6 +6,7 @@
     export let stories=[];
     export let current_page;
     export let current_section;
+    export let include_stories=false;
     export let window_w;
 
     let page;
@@ -30,18 +31,37 @@
         <h1>Wolf Pack: How Media Coverage of Criminal Justice Enabled Mass Incarceration</h1>
         <p>This database uses natural language processing to track the proliferation of sensational language in American media coverage of crime from 1975 to 2000, in order to expose its impacts on the juvenile justice system.</p>
         
-        <section>
-        <details>
-            <summary><h2>How to use</h2></summary>
-            <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p>
-        </details>
-        </section>
-        <section class='t-o-c'>
-        <h2>Stories</h2>
-            {#each stories as story,n}
-                <button on:click={go_to} class="to-page" data-page="stories" data-section="story{n+1}">{story.title}</button>
-            {/each}
-        </section>
+        
+        {#if include_stories}
+            <section>
+                <details>
+                    <summary><h2>How to use</h2></summary>
+                    <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p>
+                </details>
+            </section>
+            <section class='t-o-c'>
+                <h2>Stories</h2>
+                    {#each stories as story,n}
+                        <button on:click={go_to} class="to-page" data-page="stories" data-section="story{n+1}">{story.title}</button>
+                    {/each}
+            </section>
+        {:else}
+            <section>
+                <h2>How to use</h2>
+                <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p>
+            </section>
+            <section>
+                <details>
+                    <summary><h2>Examples</h2></summary>
+                    {#each stories as story}
+                        <QueryButton query={story.query} />
+                    {/each}
+                    
+                    <!-- <p>Here</p> -->
+                </details>
+            </section>
+        {/if}
+        
         <section class='t-o-c'>
         <h2>Info</h2>
         <button class="to-page" data-page="about" on:click={go_to}>About this project</button>
@@ -232,10 +252,14 @@
     }
 
     #brown-logo{
-        position:absolute;
-        bottom:0px;
-        right:36px;
+        position:sticky;
+        /* bottom:0px; */
+        /* right:36px; */
+        display:block;
+        float:right;
+        top:100vh;
         width:155px;
+        transform: translateY(22px);
     }
 
     #brown-logo img{
@@ -337,11 +361,14 @@
         }
 
         #brown-logo{
-            position:relative;
+            /* position:relative; */
             display:block;
-            left:-5px;
+            /* left:-5px; */
             bottom:0;
             margin-top:20px;
+            margin-bottom:10px;
+            transform:translateX(-5px);
+            float:unset;
         }
 
         .story{

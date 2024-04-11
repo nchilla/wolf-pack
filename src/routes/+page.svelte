@@ -10,6 +10,7 @@
     let graph;
 
     export let data;
+    // export let include_stories;
     let stories=data.stories;
     for(let story of stories){
         let query=story.text.find(a=>typeof a == 'object');
@@ -336,13 +337,16 @@
         bind:current_section
         {window_w}
       />
+
+      {#if data.include_stories}
       <SidebarPage
         pageid="stories" 
         content_sections={stories}
         bind:current_page
         bind:current_section
         {window_w}
-      />
+        />
+      {/if}
       <SidebarPage 
         pageid="about" 
         content_sections={data.about}
@@ -546,6 +550,7 @@
 
         :global(h1,#search,h3){
             --fs:18px;
+            --lh:28px;
             /* letter-spacing:0; */
         }
 
@@ -565,6 +570,7 @@
         article{
             width:100%;
             max-width:100%;
+            min-width:100%;
             display:flex;
             flex-flow:column nowrap;
             /* overflow:hidden; */
@@ -577,6 +583,8 @@
             padding-bottom:0px;
             max-width:100%;
             padding:20px 15px;
+            max-height:fit-content;
+            position:relative;
         }
 
         main::after{

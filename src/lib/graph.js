@@ -31,7 +31,7 @@ export const Graph = class {
     set_size(){
    
         this.dimensions.w=d3.select('#graph-wrapper').node().offsetWidth;
-        this.dimensions.h=0.7*this.dimensions.w+20;
+        this.dimensions.h=(this.dimensions.w>=700?0.6:0.7)*this.dimensions.w+20;
         this.box.attr('width',this.dimensions.w + 85);
         this.box.attr('height',this.dimensions.h);
 
@@ -74,9 +74,9 @@ export const Graph = class {
 
         const formatPercent = d3.format(".3~%")
         
-        let x_axis=d3.axisBottom(x_scale).ticks(d3.timeYear.every(this.dimensions.w>700?2:4))
+        let x_axis=d3.axisBottom(x_scale).ticks(d3.timeYear.every(this.dimensions.w>700||(this.clamp.end-this.clamp.start<4)?2:4))
 
-        
+        console.log('clamp',this.clamp.end-this.clamp.start>3)
         let y_axis=d3.axisLeft(y_scale).tickFormat(formatPercent);
         if(this.dimensions.w<700) y_axis.ticks(5);
 

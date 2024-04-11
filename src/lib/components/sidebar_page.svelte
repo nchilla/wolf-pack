@@ -277,6 +277,12 @@
         margin-top:94px;
     }
 
+    @media(max-width:1200px){
+        .page{
+            padding-right:20px;
+        }
+    }
+
     @media(max-width:900px){
 
         .t-o-c{

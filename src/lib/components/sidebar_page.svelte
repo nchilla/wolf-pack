@@ -8,6 +8,7 @@
     export let current_section;
     export let include_stories=false;
     export let window_w;
+    export let home_sections;
 
     let page;
     
@@ -21,6 +22,8 @@
             page.scroll({left:0,top})
         }
     }
+
+    console.log(content_sections)
     
 
 </script>
@@ -28,15 +31,20 @@
 
 <div class="page" id="{pageid}" class:current={pageid==current_page} bind:this={page} class:content={pageid!=='home'}>
     {#if pageid=='home'}
-        <h1>Wolf Pack: How Media Coverage of Criminal Justice Enabled Mass Incarceration</h1>
-        <p>This database uses natural language processing to track the proliferation of sensational language in American media coverage of crime from 1975 to 2000, in order to expose its impacts on the juvenile justice system.</p>
+        <h1>Wolf Pack: Tracking Media Coverage of Crime and Criminal Justice</h1>
+        <p>The Wolf Pack database is built to track the ways in which language was used to describe people, places and events relating to crime and criminal justice in the decades leading up to the era of mass incarceration.</p>
         
         
         {#if include_stories}
-            <section>
+            <section class="content-section">
                 <details>
                     <summary><h2>How to use</h2></summary>
-                    <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p>
+                    {#each home_sections?.howtouse?.text as block }
+                    <div class="block">
+                        {@html block}
+                      </div>
+                    {/each}
+                    <!-- <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p> -->
                 </details>
             </section>
             <section class='t-o-c'>
@@ -47,12 +55,8 @@
             </section>
         {:else}
             <section>
-                <h2>How to use</h2>
-                <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p>
-            </section>
-            <section>
-                <details>
-                    <summary><h2>Examples</h2></summary>
+                <details open>
+                    <summary><h2>Example searches</h2></summary>
                     {#each stories as story}
                         <QueryButton query={story.query} {include_stories} />
                     {/each}
@@ -60,6 +64,27 @@
                     <!-- <p>Here</p> -->
                 </details>
             </section>
+            <section class="content-section">
+                <details>
+                    <summary><h2>How to use this database</h2></summary>
+                    {#each home_sections?.howtouse?.text as block }
+                    <div class="block">
+                        {@html block}
+                    </div>
+                    {/each}
+                </details>
+            </section>
+            <section class="content-section">
+                <details>
+                    <summary><h2>How to interpret the graph</h2></summary>
+                    {#each home_sections?.howtointerpret?.text as block }
+                    <div class="block">
+                        {@html block}
+                    </div>
+                    {/each}
+                </details>
+            </section>
+
         {/if}
         
         <section class='t-o-c'>
@@ -86,14 +111,17 @@
         {#each content_sections as section,n}
             <section class='content-section' data-storyid="{pageid=='stories'?section.id:''}" class:story={pageid=='stories'} bind:this={section.node}>
                 {#each section.text as block,i}
-                    {#if i==1}<div class='neg-margin'></div>{/if}
+                    {#if i==1&&pageid=='stories'}<div class='neg-margin'></div>{/if}
                     {#if typeof block == 'object'}
                         <QueryButton query={block} {include_stories}/>
                       <!-- <button on:click={()=>button_search(block)}  class='graph-input'>Mentions of {@html generate_term_html(block.terms)} by <span class="underline">{block.pub_string}</span> from <span class="underline">{block.clamps.start}</span> to <span class="underline">{block.clamps.end}</span>
                         <span class="reset-chart">reset chart</span>
                       </button> -->
                     {:else}
+                      <div class="block">
                         {@html block}
+                      </div>
+                        
                     {/if}
                     
                 {/each}
@@ -122,7 +150,9 @@
 
   <style>
 
-    
+    .block{
+        display:contents;
+    }
 
     :global(h1,h3){
         margin-bottom:12px;
@@ -162,10 +192,12 @@
         background-color: var(--article-bg);
     }
 
-    .content-section{
+    .page:not(#home) .content-section{
         /* margin-bottom:40px; */
         padding-bottom:40px;
     }
+
+    
 
     .story{
         min-height:50vh;
@@ -229,10 +261,14 @@
         
     } */
 
-    :global(.page p){
+    :global(.page p,.page a){
         font-family:'TeX Gyre Schola';
         font-size:16px;
         line-height:1.28em;
+    }
+
+    :global(.page strong){
+        font-weight:600;
     }
     
 

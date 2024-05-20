@@ -16,8 +16,11 @@
         let query=story.text.find(a=>typeof a == 'object');
         story.query=query;
     }
+    let {
+        home_sections
+    } = data;
 
-
+    
 
     console.log(stories);
 
@@ -231,13 +234,20 @@
         .then((response) => response.json())
         .then((json) => {
             // console.log('response:',json)
-            let termlist=json.terms.filter(a=>
-                a!==null &&
-                a.response_type!=='insufficient data' &&
-                a.data.length>10
+            // let termlist=json.terms.filter(a=>
+            //     a!==null &&
+            //     a.response_type!=='insufficient data' &&
+            //     a.data.length>10
+            // )
+            let termlist=json.terms;
+
+            let find_invalid=termlist.find(a=>
+                a==null 
+                || a.response_type=='insufficient data' 
+                || a.data.length<=10
             )
 
-            if(termlist.length>0){
+            if(!find_invalid){
                 console.log(termlist)
                 let plots=process_data(termlist);
                 terms.map(term=>{
@@ -358,6 +368,7 @@
         bind:current_section
         include_stories={data.include_stories}
         {window_w}
+        {home_sections}
       />
 
       {#if data.include_stories}

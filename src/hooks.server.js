@@ -3,6 +3,8 @@ import * as marked from 'marked';
 
 let about=[parse_content('about')];
 let credits=[parse_content('credits')];
+let howtouse=parse_content('howtouse');
+let howtointerpret=parse_content('howtointerpret');
 // let credits_str=fs.readFileSync(`content/credits.md`, 'utf8');
 
 let story_count=3;
@@ -36,6 +38,6 @@ function parse_content(filename,n){
 
 
 
-export {stories,about,credits};
+export {stories,about,credits,howtouse,howtointerpret};
 
 

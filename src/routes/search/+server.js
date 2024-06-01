@@ -1,8 +1,9 @@
 // const Database=require('better-sqlite3');
 import Database from 'better-sqlite3';
 import { json } from '@sveltejs/kit';
+import 'dotenv/config';
 
-let db_name='data/all-pubs-eav.db';
+let db_name=process.env.DATABASE_LOCATION;
 const db = new Database(db_name, {readonly:true });
 
 export async function POST({ request }) {

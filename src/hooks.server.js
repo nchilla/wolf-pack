@@ -1,11 +1,22 @@
 import * as fs from 'fs';
 import * as marked from 'marked';
 
-let about=[parse_content('about')];
-let credits=[parse_content('credits')];
-let howtouse=parse_content('howtouse');
-let howtointerpret=parse_content('howtointerpret');
-// let credits_str=fs.readFileSync(`content/credits.md`, 'utf8');
+let about={
+    title:'About',
+    ...parse_content('about')
+};
+let credits={
+    title:'Credits',
+    ...parse_content('credits')
+};
+let howtouse={
+    title:'How to use this database',
+    ...parse_content('howtouse')
+};
+let howtointerpret={
+    title:'How to interpret the graph',
+    ...parse_content('howtointerpret')
+};
 
 let story_count=3;
 
@@ -22,13 +33,11 @@ function parse_content(filename,n){
     let text=[];
     let str=fs.readFileSync(`content/${filename}.md`, 'utf8');
     text=marked.parse(str).split('\n');
-    let title=text[0].match(/(?<=<h3>)(.*)(?=<\/h3>)/g) || [] [0];
     let data_button_i=text.findIndex(a=>a.startsWith('<p><code>'))
     if(data_button_i>=0) text[data_button_i]=JSON.parse(text[data_button_i].match(/(?<=<p><code>)(.*)(?=<\/code><\/p>)/g)[0].replaceAll('&quot;',`"`));
 
     let parsed={
         text,
-        title,
         id:filename
     }
     if(n) parsed.n=n;

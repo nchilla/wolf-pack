@@ -36,7 +36,7 @@
     $:console.log(graph_state);
 
     let window_w;
-
+    let download_data_button;
 
     // publication management ===========================================
 
@@ -89,11 +89,9 @@
             }
 
         })
-        // console.log(publications.filter(a=>a.selected));
     }
     
     $: selected_pubs=publications.filter(a=>a.selected);
-    // $: selected_strings=map_names(selected_pubs);
     $: summary_string=generate_pub_string(selected_pubs);
     
     function generate_pub_string(pubs){
@@ -140,11 +138,11 @@
 
 
     let terms=[
-        {gram:'gang',old:'',color:'255, 0, 245',visible:true,plot:[],node:undefined,i:0},
-        {gram:'',old:'',color:"0, 255, 224",visible:false,plot:[],node:undefined,i:1},
-        {gram:'',old:'',color:'102, 73, 73',visible:false,plot:[],node:undefined,i:2},
-        {gram:'',old:'',color:'67, 150, 66',visible:false,plot:[],node:undefined,i:3},
-        {gram:'',old:'',color:'254, 198, 0',visible:false,plot:[],node:undefined,i:4}
+        {gram:'gang',old:'',color:'253, 35, 244',visible:true,plot:[],node:undefined,i:0},
+        {gram:'',old:'',color:"26, 230, 206",visible:false,plot:[],node:undefined,i:1},
+        {gram:'',old:'',color:'254, 198, 0',visible:false,plot:[],node:undefined,i:2},
+        {gram:'',old:'',color:'55, 155, 53',visible:false,plot:[],node:undefined,i:3},
+        {gram:'',old:'',color:'102, 73, 73',visible:false,plot:[],node:undefined,i:4}
     ];
 
     $:{
@@ -233,12 +231,6 @@
         })
         .then((response) => response.json())
         .then((json) => {
-            // console.log('response:',json)
-            // let termlist=json.terms.filter(a=>
-            //     a!==null &&
-            //     a.response_type!=='insufficient data' &&
-            //     a.data.length>10
-            // )
             let termlist=json.terms;
 
             let find_invalid=termlist.find(a=>
@@ -254,13 +246,28 @@
                     term.plot=plots.find(a=>a.gram==term.gram)?.plot;
                 })
 
+                let downloadable_json={
+                    publications_searched:selected_pubs.map(a=>a.name),
+                    data_by_term:terms.filter(a=>a.gram.length>0).map(({gram,plot})=>{
+                        return {
+                            term:gram,
+                            plot
+                        }
+                    })
+                }
+
+                let json_str="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(downloadable_json))
+
+                download_data_button.setAttribute('href',json_str);
+
+
                 graph_state='graph';
                 
-                // console.log(graph);
                 
                 if(graph) update_graph(terms)
             }else{
                 graph_state='no-data';
+                download_data_button.setAttribute('href','json_str');
             }
             
         });
@@ -276,17 +283,22 @@
     }
     setContext('update_graph',update_graph)
 
-    function go_to(e){
+    function go_to_howtouse(e){
         console.log('!!!',e);
-        current_page=e.target.dataset.page;
-        if(e.target.dataset.section) current_section=e.target.dataset.section;
-        if(e.target.dataset.page=='stories'){
-            let story=stories.find(a=>a.id==e.target.dataset.section );
-            button_search(story.query);
-        }
+        Array.from(document.querySelectorAll('.page details')).forEach((accordion)=>{
+            if(accordion.dataset.title=='How to use this database'){
+                accordion.open=true;
+                document.querySelector('.page').scroll({
+                    top:accordion.offsetTop - 20,
+                    behavior:'smooth'
+                })
+            }
+
+
+        })
+        
     }
 
-    setContext('go_to',go_to);
 
     // onmount
     onMount(()=>{
@@ -340,7 +352,13 @@
 
 <svelte:window bind:innerWidth={window_w}/>
 
-<main>
+<main 
+    style:--col1={terms[0].color} 
+    style:--col2={terms[1].color}
+    style:--col3={terms[2].color}
+    style:--col4={terms[3].color}
+    style:--col5={terms[4].color}
+    >
     <section id="graph-column" bind:offsetWidth={graph_column_width} style='--w:{graph_column_width}px;'>
       <SearchInterface 
         bind:pub_search_term 
@@ -355,9 +373,9 @@
       />
       <GraphElement bind:clamps bind:graph {graph_state} />
       <div id="bottom-area">
-        <button>Download chart data</button>
+        <a id="download-data" bind:this={download_data_button} href="/" download="wolf_pack_percentage_data.json">Download chart data</a>
         <!-- <button>Save as image</button> -->
-        <button class="to-page" data-page="about" on:click={go_to}>Learn about how this data was collected and indexed →</button>
+        <button class="to-page" data-page="about" on:click={go_to_howtouse}>Learn about how this data was collected and indexed →</button>
       </div>
     </section>
     <article id="content-column">
@@ -381,22 +399,6 @@
         {window_w}
         />
       {/if}
-      <SidebarPage 
-        pageid="about" 
-        content_sections={data.about}
-        bind:current_page
-        bind:current_section
-        include_stories={data.include_stories}
-        {window_w}
-      />
-      <SidebarPage 
-        pageid="credits" 
-        content_sections={data.credits}
-        bind:current_page
-        bind:current_section
-        include_stories={data.include_stories}
-        {window_w}
-      />
       
     </article>
   </main>
@@ -405,6 +407,7 @@
     :root{
         --ui-bg:#F1F1F1;
         --article-bg:#EEEEEE;
+        --article-fg:#010101;
     }
 
     
@@ -541,6 +544,10 @@
         padding-top:5px;
         margin-right:15px;
         white-space:nowrap;
+    }
+
+    #bottom-area a{
+        color:black;
     }
 
     #bottom-area .to-page{

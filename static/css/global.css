@@ -7,13 +7,6 @@ body{
     line-height:var(--lh);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-
-    --col1:255, 0, 245;
-    --col2:0, 255, 224;
-    --col3:102, 73, 73;
-    --col4:67, 150, 66;
-    --col5:254, 198, 0;
 }
 
 

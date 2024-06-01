@@ -2,8 +2,6 @@
 import Database from 'better-sqlite3';
 import { json } from '@sveltejs/kit';
 
-// let db_name='data/all-pubs.db';
-// let db_name='data/all-pubs-and-counts.db';
 let db_name='data/all-pubs-eav.db';
 const db = new Database(db_name, {readonly:true });
 

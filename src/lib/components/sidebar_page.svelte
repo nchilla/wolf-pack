@@ -10,6 +10,8 @@
     export let window_w;
     export let home_sections;
 
+    console.log(home_sections)
+
     let page;
     
     let button_search=getContext('button_search');
@@ -23,7 +25,7 @@
         }
     }
 
-    console.log(content_sections)
+    // console.log(home_sections)
     
 
 </script>
@@ -31,119 +33,39 @@
 
 <div class="page" id="{pageid}" class:current={pageid==current_page} bind:this={page} class:content={pageid!=='home'}>
     {#if pageid=='home'}
-        <h1>Wolf Pack: Tracking Media Coverage of Crime and Criminal Justice</h1>
-        <p>The Wolf Pack database is built to track the ways in which language was used to describe people, places and events relating to crime and criminal justice in the decades leading up to the era of mass incarceration.</p>
-        
-        
-        {#if include_stories}
-            <section class="content-section">
-                <details>
-                    <summary><h2>How to use</h2></summary>
-                    {#each home_sections?.howtouse?.text as block }
-                    <div class="block">
-                        {@html block}
-                      </div>
-                    {/each}
-                    <!-- <p>You can enter terms in the colored search fields to graph their occurrence over time, and filter the results by publication (e.g. The New York Times), format (e.g. print media), and year.</p> -->
-                </details>
-            </section>
-            <section class='t-o-c'>
-                <h2>Stories</h2>
-                    {#each stories as story,n}
-                        <button on:click={go_to} class="to-page" data-page="stories" data-section="story{n+1}">{story.title}</button>
-                    {/each}
-            </section>
-        {:else}
-            <section>
-                <details open>
-                    <summary><h2>Example searches</h2></summary>
-                    {#each stories as story}
-                        <QueryButton query={story.query} {include_stories} />
-                    {/each}
-                    
-                    <!-- <p>Here</p> -->
-                </details>
-            </section>
-            <section class="content-section">
-                <details>
-                    <summary><h2>How to use this database</h2></summary>
-                    {#each home_sections?.howtouse?.text as block }
-                    <div class="block">
-                        {@html block}
-                    </div>
-                    {/each}
-                </details>
-            </section>
-            <section class="content-section">
-                <details>
-                    <summary><h2>How to interpret the graph</h2></summary>
-                    {#each home_sections?.howtointerpret?.text as block }
-                    <div class="block">
-                        {@html block}
-                    </div>
-                    {/each}
-                </details>
-            </section>
-
-        {/if}
-        
-        <section class='t-o-c'>
-        <h2>Info</h2>
-        <button class="to-page" data-page="about" on:click={go_to}>About this project</button>
-        <button class="to-page" data-page="credits" on:click={go_to}>Credits</button>
-    </section>
-    {#if window_w>900}
-        <a href="https://brown.columbia.edu/" target="_blank" id="brown-logo"><img alt="The Brown Institute for Media Innovation logo" src="assets/brown-full-logo.png" ></a>
-    {/if}
-    
-    {:else}
-        <div class='sticky-top-wrapper'>
-            
-            {#if window_w<=900}
-                <h2>{pageid}</h2>
-            {:else}
-                <button class="to-page back-button" data-page="home" on:click={go_to}>&lt; contents</button>
-            {/if}
-        
-        </div>
-        
-        
-        {#each content_sections as section,n}
-            <section class='content-section' data-storyid="{pageid=='stories'?section.id:''}" class:story={pageid=='stories'} bind:this={section.node}>
-                {#each section.text as block,i}
-                    {#if i==1&&pageid=='stories'}<div class='neg-margin'></div>{/if}
-                    {#if typeof block == 'object'}
-                        <QueryButton query={block} {include_stories}/>
-                      <!-- <button on:click={()=>button_search(block)}  class='graph-input'>Mentions of {@html generate_term_html(block.terms)} by <span class="underline">{block.pub_string}</span> from <span class="underline">{block.clamps.start}</span> to <span class="underline">{block.clamps.end}</span>
-                        <span class="reset-chart">reset chart</span>
-                      </button> -->
-                    {:else}
-                      <div class="block">
-                        {@html block}
-                      </div>
-                        
-                    {/if}
-                    
+        <header>
+            <h1>Wolf Pack: Tracking Media Coverage of Crime and Criminal Justice</h1>
+            <p>The Wolf Pack database is built to track the ways in which language was used to describe people, places and events relating to crime and criminal justice in the decades leading up to the era of mass incarceration.</p>
+        </header>
+        <section>
+            <details open>
+                <summary class="noselect"><h2>Example searches</h2></summary>
+                {#each stories as story}
+                    <QueryButton query={story.query} {include_stories} />
                 {/each}
-                
+            </details>
+        </section>
+        {#each home_sections as section}
+            <section class="content-section">
+                <details data-title={section.title}>
+                    <summary class="noselect"><h2>{section.title}</h2></summary>
+                    {#each section?.text as block,b }
+                        {#if block.length>0 }
+                            <div class="block" class:br-block={block.includes('<br>')} class:prose-heading={block.includes('<h4>')}>
+                                {@html block}
+                            </div>
+                        {/if}
+                    {/each}
+                </details>
             </section>
-            
         {/each}
-    
-        {#if window_w<=900&&pageid=='credits'}
+        
+        {#if window_w>900}
             <a href="https://brown.columbia.edu/" target="_blank" id="brown-logo"><img alt="The Brown Institute for Media Innovation logo" src="assets/brown-full-logo.png" ></a>
         {/if}
+    
     {/if}
     
-    <!-- <h3>Story 1 TK</h3> -->
-    
-
-    <!-- <button class='graph-input'>Mentions of <span class="color1">youth</span> and <span class="color2">juvenile</span> by <span class="underline">all publications</span> from <span class="underline">1980</span> to <span class="underline">2000</span>
-
-      <span class="reset-chart">reset chart</span>
-    </button>
-    <p class="mock">Sharletta Evans lost her three-year-old son in a hail of bullets one torturous December evening in 1995. The Colorado mother had pulled her car up in front of a northeast Denver house, intending to dash inside to pick up her niece’s baby girl, to bring her out of harm’s way. Gunfire on the street the night before had frightened everyone in the house.</p>
-    <p class="mock">On this night, a small, white car carrying three teenagers cruised to a stop in front of the house in Park Hill, on a block scarred by violence since the mid-1980s. Two teens emerged and opened fire, spraying the house they thought was filled with rival gang members.* Little Casson Xavier, nicknamed “Biscuit,” was shot as he slept in his car seat next to his six-year-old brother. Evans cradled her toddler in her arms as he bled to death before emergency medical workers could arrive. “He took his last breath in my arms,” Evans remembered recently with painful clarity. “Still, I thought they could revive him.”</p> -->
   </div>
 
 
@@ -152,6 +74,14 @@
 
     .block{
         display:contents;
+    }
+
+    :global(.block br){
+        display:none
+    }
+
+    h1{
+        margin-top:4px;
     }
 
     :global(h1,h3){
@@ -170,8 +100,9 @@
         left:0;
         transition:transform 0.5s;
         width:100%;
-        border-left:1px solid black;
+        border-left:1px solid var(--article-fg);
         background-color:var(--article-bg);
+        color:var(--article-fg);
     }
 
     #home::before{
@@ -203,11 +134,15 @@
         min-height:50vh;
     }
 
-    :global(.content-section p){
-        margin-bottom:12px;
+    :global(.content-section p:not(.block.br-block + .block p,.block.prose-heading + .block p,.block:first-of-type p)){
+        text-indent:20px;
     }
     :global(.content-section h3){
         margin-bottom: -80px;
+    }
+
+    header{
+        margin-bottom:15px;
     }
 
     /* :global(.content-section h3+p){
@@ -227,9 +162,25 @@
     }
 
     .page h2{
-        border-top:1px solid black;
-        padding-top:3px;
-        margin-top:34px;
+        border-top:1px solid var(--article-fg);
+        padding-top:10px;
+        /* margin-top:20px; */
+    }
+
+    .page section:last-of-type{
+        border-bottom:1px solid var(--article-fg);
+    }
+
+    :global(.page h4){
+        font-weight:600;
+        margin-top:15px;
+        margin-bottom:5px;
+    }
+
+    .br-block{
+        display: block;
+        margin-bottom: 4px;
+        height:1px
     }
 
     /* .page>*{
@@ -242,7 +193,7 @@
 
     .page section .to-page{
         font-weight:600;
-        color:black;
+        color:var(--article-fg);
         text-decoration:none;
         display:block;
         margin-bottom:6px;
@@ -254,6 +205,7 @@
 
     .page summary{
         cursor:pointer;
+        padding-bottom:10px;
     }
 
     /* .page summary h2{
@@ -261,7 +213,7 @@
         
     } */
 
-    :global(.page p,.page a){
+    :global(.page p,.page a,.page h4){
         font-family:'TeX Gyre Schola';
         font-size:16px;
         line-height:1.28em;
@@ -279,8 +231,12 @@
     }
 
     .page details[open] summary h2::after{
-        content:' -'
+        content:' –'
         
+    }
+
+    .page details[open]{
+        padding-bottom:20px;
     }
 
     .page summary::marker{
@@ -306,7 +262,7 @@
         font-size:12px;
         text-transform:uppercase;
         font-weight:500;
-        margin-bottom:12px;
+        /* margin-bottom:12px; */
         letter-spacing: 0.06em;
         padding:0;
     }
@@ -337,6 +293,14 @@
         margin-top:94px;
     }
 
+    :global(.content-section a){
+        text-decoration:underline;
+        text-underline-offset:2px;
+        text-decoration-thickness: 1px;
+        color:var(--article-fg);
+    }
+
+
     @media(max-width:1200px){
         .page{
             padding-right:20px;
@@ -344,6 +308,10 @@
     }
 
     @media(max-width:900px){
+
+        h1{
+            margin-bottom:0;
+        }
 
         .t-o-c{
             display:none;
@@ -358,11 +326,12 @@
             border-left:none;
             padding-bottom:0;
             
+            
         }
 
         #home{
             order:1;
-            border-top:1px solid black;
+            border-top:1px solid var(--article-fg);
         }
 
         #about{
@@ -385,7 +354,11 @@
         }
 
         .content-section{
-            padding-bottom:20px;
+            /* padding-bottom:20px; */
+        }
+
+        .page section:last-of-type{
+            border-bottom:none;
         }
 
         #credits .content-section{

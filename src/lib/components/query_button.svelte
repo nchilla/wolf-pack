@@ -41,7 +41,7 @@
         line-height:24px;
         box-sizing:border-box;
         border:1px solid transparent;
-        
+        /* color:black; */
         margin-bottom:12px;
     }
 

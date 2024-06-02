@@ -22,7 +22,6 @@
 
     
 
-    console.log(stories);
 
     let doc;
 
@@ -33,7 +32,7 @@
 
     let graph_state='loading';
 
-    $:console.log(graph_state);
+
 
     let window_w;
     let download_data_button;
@@ -240,7 +239,6 @@
             )
 
             if(!find_invalid){
-                console.log(termlist)
                 let plots=process_data(termlist);
                 terms.map(term=>{
                     term.plot=plots.find(a=>a.gram==term.gram)?.plot;
@@ -276,7 +274,6 @@
     setContext('search',search)
     
     function update_graph(){
-        console.log(clamps)
         if(!is_invalid(clamps.start,'start')&&!is_invalid(clamps.end,'end')){
             graph.update(terms);
         }
@@ -284,7 +281,6 @@
     setContext('update_graph',update_graph)
 
     function go_to_howtouse(e){
-        console.log('!!!',e);
         Array.from(document.querySelectorAll('.page details')).forEach((accordion)=>{
             if(accordion.dataset.title=='How to use this database'){
                 accordion.open=true;
@@ -304,7 +300,6 @@
     onMount(()=>{
         doc=document;
         // graph = new Graph(d3.select('#graph'),undefined,clamps);
-        console.log('!!! initialization !!!')
 
         if(data.include_stories){
             let observer = new IntersectionObserver(story_callback, {
@@ -337,7 +332,6 @@
                     
                     if(buffered_change) clearTimeout(buffered_change);
                     buffered_change=setTimeout(()=>{
-                        console.log('changing to',story.id)
                         button_search(query)
                     },100)
                     

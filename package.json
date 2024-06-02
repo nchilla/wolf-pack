@@ -10,12 +10,14 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "prod": "vite dev --host 0.0.0.0 --port 8080"
+    "prod": "vite dev --host 0.0.0.0 --port 8080",
+    "deploy":"node -r dotenv/config build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@sveltejs/adapter-auto": "^3.0.1",
+    "@sveltejs/adapter-node": "^5.0.1",
     "@sveltejs/kit": "^2.0.4",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "better-sqlite3": "^8.3.0",

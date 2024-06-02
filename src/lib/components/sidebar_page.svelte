@@ -10,7 +10,7 @@
     export let window_w;
     export let home_sections;
 
-    console.log(home_sections)
+  
 
     let page;
     

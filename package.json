@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "prod": "vite dev --host 0.0.0.0 --port 8080",
-    "deploy":"node -r dotenv/config build"
+    "deploy": "node -r dotenv/config build"
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +29,7 @@
     "express-async-handler": "^1.2.0",
     "marked": "^11.1.1",
     "svelte": "^4.2.8",
+    "tar-fs": "^3.0.8",
     "vite": "^5.0.10"
   },
   "type": "module"
